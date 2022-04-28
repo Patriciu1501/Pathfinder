@@ -1,0 +1,40 @@
+﻿using System.Drawing;
+using System.Windows.Forms;
+
+namespace Pathfinder {
+
+    class Map {
+
+        public static readonly Color initialLabelColor = Color.FromArgb(179, 239, 255);
+        public static readonly Color obstacleColor = Color.FromArgb(40, 50, 90);
+        public static readonly Color searchColor = Color.FromArgb(103, 223, 255);
+
+        public static Label[,] labeluri;
+        public static Label source, destination;
+        public static bool startFlagAdded;
+        public static bool destinationFlagAdded;
+
+
+        public Map(Form formular) {
+
+            labeluri = new Label[25, 40];
+            int height = 0;
+
+            for (int i = 0; i < labeluri.GetLength(0); i++) {
+
+                if (i > 0) height += 40;
+
+                for (int j = 0; j < labeluri.GetLength(1); j++) {
+
+                    labeluri[i, j] = new Label() { Visible = true, Width = 50, Height = 50, BackColor = initialLabelColor };
+                    labeluri[i, j].Location = new Point(j > 0 ? labeluri[i, j - 1].Location.X + labeluri[i, j - 1].Width - 10 : 0, height);
+                    labeluri[i, j].MouseMove += Events.labelMouseMove;
+                    labeluri[i, j].MouseLeave += Events.labelMouseLeave;
+                    labeluri[i, j].MouseDown += Events.labelMouseDown;
+                    formular.Controls.Add(labeluri[i, j]);
+                }
+            }
+        }
+    }
+}
+
