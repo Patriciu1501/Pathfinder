@@ -4,7 +4,6 @@ using System.Threading;
 using System.Collections.Specialized;
 using System.Windows.Forms;
 using System.Drawing;
-using System.Threading.Tasks;
 
 namespace Pathfinder.Algorithms {
 
@@ -37,7 +36,7 @@ namespace Pathfinder.Algorithms {
 
             adjancecyList = new OrderedDictionary();
             createAdjencecyList();
-            Map.source.Image = Image.FromFile("startSearches.png");         
+            Map.source.Image = Map.sourceSearchesImage;        
             Map.source.BackColor = Map.searchColor;
 
             if (algorithmState == AlgorithmState.Running || algorithmState == AlgorithmState.Finished) {
@@ -47,12 +46,13 @@ namespace Pathfinder.Algorithms {
 
                 for (int i = 0; i < Map.labeluri.GetLength(0); i++)
                     for (int j = 0; j < Map.labeluri.GetLength(1); j++)
-                        if (Map.labeluri[i, j].BackColor == Map.searchColor || Map.labeluri[i, j].BackColor == Color.Gold)
+                        if (Map.labeluri[i, j].BackColor == Map.searchColor || Map.labeluri[i, j].BackColor == Map.searchColorBorder || Map.labeluri[i, j].BackColor == Color.Gold)
                             Map.labeluri[i, j].BackColor = Map.initialLabelColor;
 
-                Map.destination.Image = Image.FromFile("destination.png");
-                Map.source.Image = Image.FromFile("startSearches.png");
+                Map.destination.Image = Map.destinationImage;
+                Map.source.Image = Map.sourceSearchesImage;
                 Map.source.BackColor = Map.searchColor;
+                Menu.exploredNodes.Text = "Explored: 0";
             }
 
             algorithmState = AlgorithmState.Running;

@@ -8,6 +8,12 @@ namespace Pathfinder {
         public static readonly Color initialLabelColor = Color.FromArgb(179, 239, 255);
         public static readonly Color obstacleColor = Color.FromArgb(40, 50, 90);
         public static readonly Color searchColor = Color.FromArgb(103, 223, 255);
+        public static readonly Color searchColorBorder = Color.FromArgb(128, 196, 255);
+
+        public static readonly Image sourceImage = Image.FromFile("start.png");
+        public static readonly Image sourceSearchesImage = Image.FromFile("startSearches.png");
+        public static readonly Image destinationImage = Image.FromFile("destination.png");
+        public static readonly Image destinationReachedImage = Image.FromFile("destinationReached.png");
 
         public static Label[,] labeluri;
         public static Label source, destination;
@@ -17,7 +23,7 @@ namespace Pathfinder {
 
         public Map(Form formular) {
 
-            labeluri = new Label[25, 40];
+            labeluri = new Label[22, 39];
             int height = 0;
 
             for (int i = 0; i < labeluri.GetLength(0); i++) {

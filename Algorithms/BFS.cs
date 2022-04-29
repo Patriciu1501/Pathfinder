@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 
@@ -13,7 +13,11 @@ namespace Pathfinder.Algorithms {
 
             base.StartAlgorithm();
 
-            if (!adjancecyList.Contains(Map.source)) return;
+            if (!adjancecyList.Contains(Map.source)) {
+
+                algorithmState = AlgorithmState.Finished;
+                return;
+            }
 
 
             Queue<Label> toVisit = new Queue<Label>();
@@ -32,23 +36,29 @@ namespace Pathfinder.Algorithms {
 
                         toVisit.Enqueue((adjancecyList[toVisit.Peek()] as List<Label>)[i]);
                         visited.Add((adjancecyList[toVisit.Peek()] as List<Label>)[i]);
-                        visited[visited.Count - 1].BackColor = Color.Gold;
-                        Thread.Sleep(algorithmSpeed = 10);
-
-                        visited[visited.Count - 1].BackColor = Map.searchColor;
+                        visited[visited.Count - 1].BackColor = Map.searchColorBorder;
 
 
                         if (visited[visited.Count - 1] == Map.destination) {
 
                             destinationReached = true;
-                            Map.destination.Image = Image.FromFile("destinationReached.png");
-                            Map.destination.BackColor = Map.searchColor;
+                            Map.destination.Image = Map.destinationReachedImage;
+                            Map.destination.BackColor = Map.searchColorBorder;
                             break;
                         }
                     }
 
                 }
 
+                string[] splits = Menu.exploredNodes.Text.Split(' ');
+                int nr = Convert.ToInt32(splits[1]);
+                nr++;
+                Menu.exploredNodes.Text = splits[0] + " " + nr;
+             
+
+                toVisit.Peek().BackColor = Color.Gold;
+                Thread.Sleep(algorithmSpeed = 20);
+                toVisit.Peek().BackColor = Map.searchColor;
                 toVisit.Dequeue();
 
             }

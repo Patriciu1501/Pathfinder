@@ -9,8 +9,10 @@ namespace Pathfinder {
         Button buttonResetare;
         Button buttonIesire;
         Button BFS;
+        Button DFS;
 
         public static Button countObstacles;
+        public static Button exploredNodes;
 
         public Menu() {
 
@@ -18,7 +20,9 @@ namespace Pathfinder {
             buttonResetare = new Button() { Visible = true };
             buttonIesire = new Button() { Visible = true };
             BFS = new Button() { Visible = true };
+            DFS = new Button() { Visible = true };
             countObstacles = new Button() { Visible = true };
+            exploredNodes = new Button() { Visible = true };
 
             buttonResetare.FlatStyle = FlatStyle.Flat;
             buttonResetare.FlatAppearance.BorderSize = 0;
@@ -52,6 +56,17 @@ namespace Pathfinder {
             BFS.Size = new Size(80, 20);
             BFS.MouseEnter += Events.mouseEnterMenuButton;
 
+            DFS.FlatStyle = FlatStyle.Flat;
+            DFS.FlatAppearance.BorderSize = 0;
+            DFS.Click += Events.DFSClick;
+            DFS.Text = "&DFS";
+            DFS.Location = new Point(buttonResetare.Width + 250, 0);
+            DFS.ForeColor = Color.FromArgb(0, 207, 255);
+            DFS.BackColor = Color.Black;
+            DFS.Font = new Font("Nirmala UI", 11, FontStyle.Bold);
+            DFS.Size = new Size(80, 20);
+            DFS.MouseEnter += Events.mouseEnterMenuButton;
+
 
             countObstacles.FlatStyle = FlatStyle.Flat;
             countObstacles.FlatAppearance.BorderSize = 0;
@@ -63,11 +78,23 @@ namespace Pathfinder {
             countObstacles.Size = new Size(120, 20);
             countObstacles.MouseEnter += Events.mouseEnterMenuButton;
 
+            exploredNodes.FlatStyle = FlatStyle.Flat;
+            exploredNodes.FlatAppearance.BorderSize = 0;
+            exploredNodes.Text = "Explored: 0";
+            exploredNodes.Location = new Point(buttonResetare.Width + 1150, 0);
+            exploredNodes.ForeColor = Color.FromArgb(0, 207, 255);
+            exploredNodes.BackColor = Color.Black;
+            exploredNodes.Font = new Font("Nirmala UI", 11, FontStyle.Bold);
+            exploredNodes.Size = new Size(120, 20);
+            exploredNodes.MouseEnter += Events.mouseEnterMenuButton;
+
 
             topBar.Controls.Add(buttonIesire);
             topBar.Controls.Add(buttonResetare);
             topBar.Controls.Add(countObstacles);
+            topBar.Controls.Add(exploredNodes);
             topBar.Controls.Add(BFS);
+            topBar.Controls.Add(DFS);
         }
     }
 }

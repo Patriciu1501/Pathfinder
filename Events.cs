@@ -14,6 +14,8 @@ namespace Pathfinder {
 
             if (e.Button == MouseButtons.None && curr.Image == null && curr.BackColor == Map.initialLabelColor) curr.BackColor = Color.Aqua;
 
+            else if(!Map.startFlagAdded || !Map.destinationFlagAdded) return;
+
             else if (e.Button == MouseButtons.Left && curr.Image == null && curr.BackColor != Map.obstacleColor && Algorithm.algorithmState != Algorithm.AlgorithmState.Running) {
 
                 string[] splits = Menu.countObstacles.Text.Split(' ');
@@ -52,15 +54,15 @@ namespace Pathfinder {
             if (Map.startFlagAdded == false) {
 
                 curr.BackColor = Map.initialLabelColor;
-                curr.Image = Image.FromFile("start.png");
+                curr.Image = Map.sourceImage;
                 Map.source = curr;
                 Map.startFlagAdded = true;
             }
 
-            else if (Map.destinationFlagAdded == false) {
+            else if (Map.destinationFlagAdded == false && curr.Image == null) {
 
                 curr.BackColor = Map.initialLabelColor;
-                curr.Image = Image.FromFile("destination.png");
+                curr.Image = Map.destinationImage;
                 Map.destination = curr;
                 Map.destinationFlagAdded = true;
             }
@@ -102,6 +104,7 @@ namespace Pathfinder {
             Map.startFlagAdded = false;
             Map.destinationFlagAdded = false;
             Menu.countObstacles.Text = "Obstacles: 0";
+            Menu.exploredNodes.Text = "Explored: 0";
             Algorithm.adjancecyList = new OrderedDictionary();
             
             if (Algorithm.algorithmState == Algorithm.AlgorithmState.Running) {
@@ -135,6 +138,16 @@ namespace Pathfinder {
             startBFS.RunningAlgorithm.Add(new Thread(startBFS.StartAlgorithm));
             startBFS.RunningAlgorithm[startBFS.RunningAlgorithm.Count - 1].Start();
                       
+        }
+
+
+        static public void DFSClick(object sender, EventArgs e) {
+
+            Algorithm startDFS = new DFS();
+
+            startDFS.RunningAlgorithm.Add(new Thread(startDFS.StartAlgorithm));
+            startDFS.RunningAlgorithm[startDFS.RunningAlgorithm.Count - 1].Start();
+
         }
 
     }
