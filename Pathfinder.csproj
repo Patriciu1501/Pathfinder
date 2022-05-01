@@ -51,6 +51,7 @@
     <Compile Include="Algorithms\BFS.cs" />
     <Compile Include="Algorithms\DFS.cs" />
     <Compile Include="Algorithms\Dijkstra.cs" />
+    <Compile Include="Algorithms\MazeBacktracker.cs" />
     <Compile Include="EntryPoint.cs" />
     <Compile Include="Events.cs" />
     <Compile Include="Map.cs" />
@@ -78,6 +79,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ExceptionsLogs.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

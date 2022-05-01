@@ -30,19 +30,14 @@ namespace Pathfinder.Algorithms {
 
             if (Map.source == null || Map.destination == null) {
 
-                RunningAlgorithm[RunningAlgorithm.Count - 1].Abort();
-                RunningAlgorithm.RemoveAt(RunningAlgorithm.Count - 1);
-            }
-
-            adjancecyList = new OrderedDictionary();
-            createAdjencecyList();
-            Map.source.Image = Map.sourceSearchesImage;        
-            Map.source.BackColor = Map.searchColor;
+                runningAlgorithm[runningAlgorithm.Count - 1].Abort();
+                runningAlgorithm.RemoveAt(runningAlgorithm.Count - 1);
+            }       
 
             if (algorithmState == AlgorithmState.Running || algorithmState == AlgorithmState.Finished) {
                 
-                RunningAlgorithm[RunningAlgorithm.Count - 2].Abort();
-                RunningAlgorithm.RemoveAt(RunningAlgorithm.Count - 2);
+                runningAlgorithm[runningAlgorithm.Count - 2].Abort();
+                runningAlgorithm.RemoveAt(runningAlgorithm.Count - 2);
 
                 for (int i = 0; i < Map.labeluri.GetLength(0); i++)
                     for (int j = 0; j < Map.labeluri.GetLength(1); j++)
@@ -54,6 +49,11 @@ namespace Pathfinder.Algorithms {
                 Map.source.BackColor = Map.searchColor;
                 Menu.exploredNodes.Text = "Explored: 0";
             }
+
+            adjancecyList = new OrderedDictionary();
+            createAdjencecyList();
+            Map.source.Image = Map.sourceSearchesImage;
+            Map.source.BackColor = Map.searchColor;
 
             algorithmState = AlgorithmState.Running;
 
@@ -69,7 +69,7 @@ namespace Pathfinder.Algorithms {
 
         }
 
-        protected void createAdjencecyList() {
+        public static void createAdjencecyList() {
 
 
             adjancecyList = new OrderedDictionary();

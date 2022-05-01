@@ -50,11 +50,12 @@ namespace Pathfinder.Algorithms {
 
                 }
 
+                #region Explored Nodes
                 string[] splits = Menu.exploredNodes.Text.Split(' ');
                 int nr = Convert.ToInt32(splits[1]);
                 nr++;
                 Menu.exploredNodes.Text = splits[0] + " " + nr;
-             
+                #endregion
 
                 toVisit.Peek().BackColor = Color.Gold;
                 Thread.Sleep(algorithmSpeed = 20);
@@ -64,6 +65,7 @@ namespace Pathfinder.Algorithms {
             }
 
             algorithmState = AlgorithmState.Finished;
+         
         }
 
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -36,19 +37,20 @@ namespace Pathfinder.Algorithms {
             }
 
             visited.Add(sursa);
-            sursa.BackColor = Map.searchColorBorder;
+            sursa.BackColor = Color.Gold;
             Thread.Sleep(20);
             sursa.BackColor = Map.searchColor;
 
+            #region Explored Nodes
             string[] splits = Menu.exploredNodes.Text.Split(' ');
             int nr = Convert.ToInt32(splits[1]);
             nr++;
             Menu.exploredNodes.Text = splits[0] + " " + nr;
-
+            #endregion
 
             foreach (var i in adjancecyList[sursa] as List<Label>) 
                 if (!visited.Contains(i) && stopFunciton == false) PreorderTraversal(i, visited, ref stopFunciton);
-            
+
         }
     
   

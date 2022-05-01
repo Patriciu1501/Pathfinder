@@ -1,5 +1,7 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
+
 
 namespace Pathfinder {
 
@@ -20,10 +22,11 @@ namespace Pathfinder {
         public static bool startFlagAdded;
         public static bool destinationFlagAdded;
 
+        
 
         public Map(Form formular) {
 
-            labeluri = new Label[22, 39];
+            labeluri = new Label[21, 38];
             int height = 0;
 
             for (int i = 0; i < labeluri.GetLength(0); i++) {
@@ -35,11 +38,22 @@ namespace Pathfinder {
                     labeluri[i, j] = new Label() { Visible = true, Width = 50, Height = 50, BackColor = initialLabelColor };
                     labeluri[i, j].Location = new Point(j > 0 ? labeluri[i, j - 1].Location.X + labeluri[i, j - 1].Width - 10 : 0, height);
                     labeluri[i, j].MouseMove += Events.labelMouseMove;
+                    labeluri[i, j].Name = i + " " + j;
                     labeluri[i, j].MouseLeave += Events.labelMouseLeave;
                     labeluri[i, j].MouseDown += Events.labelMouseDown;
                     formular.Controls.Add(labeluri[i, j]);
                 }
             }
+        }
+
+
+        public static Tuple<int, int> getPos(string name) {
+
+            Tuple<int, int> result;
+            string[] splits = name.Split(' ');
+            result = new Tuple<int, int>(Convert.ToInt32(splits[0]), Convert.ToInt32(splits[1]));
+
+            return result;
         }
     }
 }

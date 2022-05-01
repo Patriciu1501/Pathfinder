@@ -93,11 +93,17 @@ namespace Pathfinder {
                 for (int j = 0; j < Map.labeluri.GetLength(1); j++) Map.labeluri[i, j].BackColor = Map.initialLabelColor;
 
 
-            if(Map.source != null && Map.destination != null) {   // need this because when you try to reset an empty map you access a null object
+
+
+            if(Map.source != null) {
 
                 Map.source.Image = null;
-                Map.destination.Image = null;
                 Map.source = null;
+            }
+
+            if(Map.destination != null) {
+
+                Map.destination.Image = null;
                 Map.destination = null;
             }
             
@@ -147,6 +153,15 @@ namespace Pathfinder {
 
             startDFS.RunningAlgorithm.Add(new Thread(startDFS.StartAlgorithm));
             startDFS.RunningAlgorithm[startDFS.RunningAlgorithm.Count - 1].Start();
+
+        }
+
+        static public void MazeClick(object sender, EventArgs e) {
+
+            Algorithm startMazeBacktracker = new MazeBacktracker();
+
+            startMazeBacktracker.RunningAlgorithm.Add(new Thread(startMazeBacktracker.StartAlgorithm));
+            startMazeBacktracker.RunningAlgorithm[startMazeBacktracker.RunningAlgorithm.Count - 1].Start();
 
         }
 

@@ -6,10 +6,11 @@ namespace Pathfinder {
     class Menu {
 
         public Label topBar;
-        Button buttonResetare;
-        Button buttonIesire;
-        Button BFS;
-        Button DFS;
+        private Button buttonResetare;
+        private Button buttonIesire;
+        private Button BFS;
+        private Button DFS;
+        private Button Maze;
 
         public static Button countObstacles;
         public static Button exploredNodes;
@@ -21,6 +22,7 @@ namespace Pathfinder {
             buttonIesire = new Button() { Visible = true };
             BFS = new Button() { Visible = true };
             DFS = new Button() { Visible = true };
+            Maze = new Button() { Visible = true };
             countObstacles = new Button() { Visible = true };
             exploredNodes = new Button() { Visible = true };
 
@@ -68,6 +70,18 @@ namespace Pathfinder {
             DFS.MouseEnter += Events.mouseEnterMenuButton;
 
 
+            Maze.FlatStyle = FlatStyle.Flat;
+            Maze.FlatAppearance.BorderSize = 0;
+            Maze.Click += Events.MazeClick;
+            Maze.Text = "&Maze";
+            Maze.Location = new Point(buttonResetare.Width + 350, 0);
+            Maze.ForeColor = Color.FromArgb(0, 207, 255);
+            Maze.BackColor = Color.Black;
+            Maze.Font = new Font("Nirmala UI", 11, FontStyle.Bold);
+            Maze.Size = new Size(80, 20);
+            Maze.MouseEnter += Events.mouseEnterMenuButton;
+
+
             countObstacles.FlatStyle = FlatStyle.Flat;
             countObstacles.FlatAppearance.BorderSize = 0;
             countObstacles.Text = "Obstacles: 0";
@@ -95,6 +109,7 @@ namespace Pathfinder {
             topBar.Controls.Add(exploredNodes);
             topBar.Controls.Add(BFS);
             topBar.Controls.Add(DFS);
+            topBar.Controls.Add(Maze);
         }
     }
 }
