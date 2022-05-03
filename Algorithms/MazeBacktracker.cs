@@ -10,8 +10,8 @@ namespace Pathfinder.Algorithms {
 
 
         public static Random randomNumber;
-        public static List<Tuple<Label, Label>> permanentPairs = new List<Tuple<Label, Label>>();
-        public static Dictionary<Label, List<Label>> neighbours = new Dictionary<Label, List<Label>>();
+        public static List<Tuple<Label, Label>> permanentPairs;
+        public static Dictionary<Label, List<Label>> neighbours;
         public override void StartAlgorithm() {
 
             
@@ -24,18 +24,17 @@ namespace Pathfinder.Algorithms {
                     for (int j = 0; j < Map.labeluri.GetLength(1); j++)
                         if (Map.labeluri[i, j].BackColor == Map.obstacleColor)
                             Map.labeluri[i, j].BackColor = Map.initialLabelColor;
-
             }
 
 
             randomNumber = new Random();
+            neighbours = new Dictionary<Label, List<Label>>();
+            permanentPairs = new List<Tuple<Label, Label>>();
             createAdjencecyList();
             algorithmState = AlgorithmState.Running;
 
-            Dictionary<Label, List<Label>> neighbours = new Dictionary<Label, List<Label>>();
 
-
-            Helper(Map.labeluri[0, 0]);
+            Helper(Map.labeluri[1, 1]);
 
 
             List<string> labelsNames = new List<string>();
@@ -47,6 +46,7 @@ namespace Pathfinder.Algorithms {
                 labelsNames.Add(Middle(i));
             }
 
+            Thread.Sleep(300);
 
             for (int i = 0; i < Map.labeluri.GetLength(0); i++) {
 
@@ -62,6 +62,7 @@ namespace Pathfinder.Algorithms {
 
             //EntryPoint.fisier.Close();
             algorithmState = AlgorithmState.Finished;
+            Thread.Sleep(500);
         }
 
 

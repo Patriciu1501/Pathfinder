@@ -7,6 +7,9 @@ namespace Pathfinder {
 
     class Map {
 
+        public const int heightForm = 21;
+        public const int widthForm = 39;
+
         public static readonly Color initialLabelColor = Color.FromArgb(179, 239, 255);
         public static readonly Color obstacleColor = Color.FromArgb(40, 50, 90);
         public static readonly Color searchColor = Color.FromArgb(103, 223, 255);
@@ -26,7 +29,7 @@ namespace Pathfinder {
 
         public Map(Form formular) {
 
-            labeluri = new Label[21, 38];
+            labeluri = new Label[heightForm, widthForm];
             int height = 0;
 
             for (int i = 0; i < labeluri.GetLength(0); i++) {

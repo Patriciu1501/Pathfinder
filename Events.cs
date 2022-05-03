@@ -118,6 +118,9 @@ namespace Pathfinder {
                 Algorithm.runningAlgorithm[Algorithm.runningAlgorithm.Count - 1].Abort();
                 Algorithm.algorithmState = Algorithm.AlgorithmState.NeverFinished;
             }
+
+            MazeBacktracker.permanentPairs = new System.Collections.Generic.List<Tuple<Label, Label>>();
+            MazeBacktracker.neighbours = new System.Collections.Generic.Dictionary<Label, System.Collections.Generic.List<Label>>();
         }
 
 
