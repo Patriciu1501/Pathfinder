@@ -35,6 +35,7 @@ namespace Pathfinder {
             buttonResetare.Font = new Font("Nirmala UI", 11, FontStyle.Bold);
             buttonResetare.Size = new Size(80, 20);
             buttonResetare.MouseEnter += Events.mouseEnterMenuButton;
+            buttonResetare.MouseLeave += Events.mouseLeaveMenuButton;
 
             buttonIesire.FlatStyle = FlatStyle.Flat;
             buttonIesire.FlatAppearance.BorderSize = 0;
@@ -46,6 +47,7 @@ namespace Pathfinder {
             buttonIesire.Font = new Font("Nirmala UI", 11, FontStyle.Bold);
             buttonIesire.Size = new Size(80, 20);
             buttonIesire.MouseEnter += Events.mouseEnterMenuButton;
+            buttonIesire.MouseLeave += Events.mouseLeaveMenuButton;
 
             BFS.FlatStyle = FlatStyle.Flat;
             BFS.FlatAppearance.BorderSize = 0;
@@ -57,6 +59,7 @@ namespace Pathfinder {
             BFS.Font = new Font("Nirmala UI", 11, FontStyle.Bold);
             BFS.Size = new Size(80, 20);
             BFS.MouseEnter += Events.mouseEnterMenuButton;
+            BFS.MouseLeave += Events.mouseLeaveMenuButton;
 
             DFS.FlatStyle = FlatStyle.Flat;
             DFS.FlatAppearance.BorderSize = 0;
@@ -68,6 +71,7 @@ namespace Pathfinder {
             DFS.Font = new Font("Nirmala UI", 11, FontStyle.Bold);
             DFS.Size = new Size(80, 20);
             DFS.MouseEnter += Events.mouseEnterMenuButton;
+            DFS.MouseLeave += Events.mouseLeaveMenuButton;
 
 
             Maze.FlatStyle = FlatStyle.Flat;
@@ -80,6 +84,7 @@ namespace Pathfinder {
             Maze.Font = new Font("Nirmala UI", 11, FontStyle.Bold);
             Maze.Size = new Size(80, 20);
             Maze.MouseEnter += Events.mouseEnterMenuButton;
+            Maze.MouseLeave += Events.mouseLeaveMenuButton;
 
 
             countObstacles.FlatStyle = FlatStyle.Flat;
@@ -91,6 +96,7 @@ namespace Pathfinder {
             countObstacles.Font = new Font("Nirmala UI", 11, FontStyle.Bold);
             countObstacles.Size = new Size(120, 20);
             countObstacles.MouseEnter += Events.mouseEnterMenuButton;
+            
 
             exploredNodes.FlatStyle = FlatStyle.Flat;
             exploredNodes.FlatAppearance.BorderSize = 0;

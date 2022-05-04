@@ -137,8 +137,20 @@ namespace Pathfinder {
 
         static public void formClose(object sender, FormClosingEventArgs e) => clickIesire(sender, e); // for ALT+F4
 
-        static public void mouseEnterMenuButton(object sender, EventArgs e) => (sender as Button).Cursor = Cursors.Hand;
+        static public void mouseEnterMenuButton(object sender, EventArgs e) {
 
+            if((sender as Button).Text.Length <= 6) {
+
+                (sender as Button).Cursor = Cursors.Hand;
+                (sender as Button).BackColor = Color.DarkGray;
+            }
+        }
+
+
+        static public void mouseLeaveMenuButton(object sender, EventArgs e) {
+
+            (sender as Button).BackColor = Color.Black;
+        }
 
         static public void BFSClick(object sender, EventArgs e) {
 
