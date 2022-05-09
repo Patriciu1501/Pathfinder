@@ -34,7 +34,7 @@ namespace Pathfinder.Algorithms {
             algorithmState = AlgorithmState.Running;
 
 
-            Helper(Map.labeluri[1, 1]);
+            Helper(Map.labeluri[0, 0]);
 
 
             List<string> labelsNames = new List<string>();

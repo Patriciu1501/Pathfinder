@@ -82,6 +82,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ExceptionsLogs.txt" />
+    <Content Include="Images\destination.png" />
+    <Content Include="Images\destinationReached.png" />
+    <Content Include="Images\Pathfinder.exe" />
+    <Content Include="Images\start.png" />
+    <Content Include="Images\startSearches.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
