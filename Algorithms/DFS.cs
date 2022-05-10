@@ -20,7 +20,7 @@ namespace Pathfinder.Algorithms {
 
             bool stopFunction = false;
             Helper(Map.source, Map.source, ref stopFunction);
-            DrawPath();
+            if(destinationFound) DrawPath();
             algorithmState = AlgorithmState.Finished;
 
         }
@@ -33,6 +33,7 @@ namespace Pathfinder.Algorithms {
                 path.Add(sursa, prev);
                 Map.destination.BackColor = Map.searchColorBorder;
                 Map.destination.Image = Map.destinationReachedImage;
+                destinationFound = true;
                 stopFunciton = true;
                 return;
             }

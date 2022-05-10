@@ -1,9 +1,0 @@
-System.IndexOutOfRangeException: Индекс находился вне границ массива.
-   в Pathfinder.Algorithms.BFS.StartAlgorithm() в C:\Users\bogat\source\repos\Pathfinder\Algorithms\BFS.cs:строка 54
-   в System.Threading.ThreadHelper.ThreadStart_Context(Object state)
-   в System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
-   в System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
-   в System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state)
-   в System.Threading.ThreadHelper.ThreadStart()
-
-

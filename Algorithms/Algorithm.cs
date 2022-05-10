@@ -31,6 +31,7 @@ namespace Pathfinder.Algorithms {
         public List<Thread> RunningAlgorithm { get => runningAlgorithm; set => runningAlgorithm = value; } // fac asta ca sa pot accesa membrul static in asociere cu un obiect
         public static OrderedDictionary adjancecyList;
         public OrderedDictionary path;
+        protected bool destinationFound;
 
         static Algorithm() {
 
@@ -73,6 +74,7 @@ namespace Pathfinder.Algorithms {
                 Menu.exploredNodes.Text = "Explored: 0";
             }
 
+            destinationFound = false;
             path = new OrderedDictionary();
             adjancecyList = new OrderedDictionary();
             createAdjencecyList();

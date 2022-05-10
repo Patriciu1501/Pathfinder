@@ -21,12 +21,11 @@ namespace Pathfinder.Algorithms {
 
 
             Queue<Label> toVisit = new Queue<Label>();
-            bool destinationReached = false;
 
             toVisit.Enqueue(Map.source);
             path.Add(Map.source, Map.source);
 
-            while (!destinationReached && toVisit.Count > 0) {
+            while (!destinationFound && toVisit.Count > 0) {
 
 
                 for (int i = 0; i < (adjancecyList[toVisit.Peek()] as List<Label>).Count; i++) {
@@ -40,7 +39,7 @@ namespace Pathfinder.Algorithms {
 
                         if ((adjancecyList[toVisit.Peek()] as List<Label>)[i] == Map.destination) {
 
-                            destinationReached = true;
+                            destinationFound = true;
                             Map.destination.Image = Map.destinationReachedImage;
                             Map.destination.BackColor = Map.searchColorBorder;
                             break;
@@ -64,7 +63,7 @@ namespace Pathfinder.Algorithms {
 
             }
 
-            DrawPath();
+            if(destinationFound) DrawPath();
             algorithmState = AlgorithmState.Finished;
 
         }
