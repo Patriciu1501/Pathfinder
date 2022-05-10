@@ -11,17 +11,30 @@ namespace Pathfinder.Algorithms {
 
     class Algorithm {
 
-        public enum AlgorithmState { Running, Finished, NeverFinished }   // am creat asta ca sa pot reincepe un algoritm in momentul cand s-a terminat
+        public enum AlgorithmState{ Running, Finished, NeverFinished }   // am creat asta ca sa pot reincepe un algoritm in momentul cand s-a terminat
         public static AlgorithmState algorithmState;// doar cand e neverfinished nu se va sterge practic totul de pe map
+        public enum AlgorithmSpeed: byte { 
+
+            Paused = 200, 
+            VerySlow = 50, 
+            Slow = 40, 
+            Standard = 30, 
+            Fast = 20, 
+            VeryFast = 10,
+            Instant = 0
+        
+        };
+        public static AlgorithmSpeed algorithmSpeed;
 
 
         public static List<Thread> runningAlgorithm;
         public List<Thread> RunningAlgorithm { get => runningAlgorithm; set => runningAlgorithm = value; } // fac asta ca sa pot accesa membrul static in asociere cu un obiect
         public static OrderedDictionary adjancecyList;
-        public static byte algorithmSpeed;
+        public OrderedDictionary path;
 
         static Algorithm() {
 
+            algorithmSpeed = AlgorithmSpeed.VeryFast;
             algorithmState = AlgorithmState.NeverFinished;
             runningAlgorithm = new List<Thread>();
         }
@@ -36,13 +49,23 @@ namespace Pathfinder.Algorithms {
 
             if (algorithmState == AlgorithmState.Running || algorithmState == AlgorithmState.Finished) {
                 
+                if(algorithmSpeed == AlgorithmSpeed.Paused) {
+
+                    runningAlgorithm[runningAlgorithm.Count - 2].Resume();
+                    algorithmSpeed = AlgorithmSpeed.Standard;
+                }
+
                 runningAlgorithm[runningAlgorithm.Count - 2].Abort();
                 runningAlgorithm.RemoveAt(runningAlgorithm.Count - 2);
 
                 for (int i = 0; i < Map.labeluri.GetLength(0); i++)
                     for (int j = 0; j < Map.labeluri.GetLength(1); j++)
-                        if (Map.labeluri[i, j].BackColor == Map.searchColor || Map.labeluri[i, j].BackColor == Map.searchColorBorder || Map.labeluri[i, j].BackColor == Color.Gold)
+                        if (Map.labeluri[i, j].BackColor != Map.obstacleColor) {
+
                             Map.labeluri[i, j].BackColor = Map.initialLabelColor;
+                            Map.labeluri[i, j].Image = null;
+                        }
+                            
 
                 Map.destination.Image = Map.destinationImage;
                 Map.source.Image = Map.sourceSearchesImage;
@@ -50,6 +73,7 @@ namespace Pathfinder.Algorithms {
                 Menu.exploredNodes.Text = "Explored: 0";
             }
 
+            path = new OrderedDictionary();
             adjancecyList = new OrderedDictionary();
             createAdjencecyList();
             Map.source.Image = Map.sourceSearchesImage;
@@ -60,13 +84,31 @@ namespace Pathfinder.Algorithms {
         }
 
 
-        protected virtual void GetPath(out List<Label> path) {
+        protected void DrawPath() {
 
-            path = new List<Label>();
+            Label last = path[path.Count - 1] as Label;
+            List<Label> lista = new List<Label>();
+            lista.Add(Map.destination);
 
+            while (last != Map.source) {
 
+                lista.Add(last);
+                last = path[last] as Label;
+            }
 
+            lista.Add(Map.source);
+            lista.Reverse();
 
+            Label tempSource = Map.source;
+
+            foreach (var i in lista) {
+
+                Thread.Sleep((int)algorithmSpeed);
+                tempSource.Image = null;
+                tempSource = i;
+                i.Image = Map.sourcePath;
+                tempSource.BackColor = Map.pathColor;
+            }
         }
 
         public static void createAdjencecyList() {

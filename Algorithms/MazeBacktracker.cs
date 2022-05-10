@@ -14,7 +14,7 @@ namespace Pathfinder.Algorithms {
         public static Dictionary<Label, List<Label>> neighbours;
         public override void StartAlgorithm() {
 
-            
+            // aici nu am base apel pentru ca e nevoie de un comportament mai diferit a metodei respective, ea nefiind una de pathfinding
             if (algorithmState == AlgorithmState.Running || algorithmState == AlgorithmState.Finished) {
 
                 runningAlgorithm[runningAlgorithm.Count - 2].Abort();
@@ -22,11 +22,17 @@ namespace Pathfinder.Algorithms {
 
                 for (int i = 0; i < Map.labeluri.GetLength(0); i++)
                     for (int j = 0; j < Map.labeluri.GetLength(1); j++)
-                        if (Map.labeluri[i, j].BackColor == Map.obstacleColor)
+                         {
                             Map.labeluri[i, j].BackColor = Map.initialLabelColor;
+                            Map.labeluri[i, j].Image = null;
+                        }
+                            
             }
 
-
+            Map.source = null;
+            Map.destination = null;
+            Map.destinationFlagAdded = false;
+            Map.startFlagAdded = false;
             randomNumber = new Random();
             neighbours = new Dictionary<Label, List<Label>>();
             permanentPairs = new List<Tuple<Label, Label>>();
@@ -60,7 +66,7 @@ namespace Pathfinder.Algorithms {
             }
 
 
-            //EntryPoint.fisier.Close();
+            Menu.countObstacles.Text = "Obstacles: " + (Map.labeluri.Length - labelsNames.Count);
             algorithmState = AlgorithmState.Finished;
             Thread.Sleep(500);
         }

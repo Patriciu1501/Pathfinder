@@ -13,7 +13,7 @@
 
             formular = new Form();
             menu = new Menu();
-            formular.Controls.Add(menu.topBar);
+            formular.Controls.Add(Menu.topBar);
             map = new Map(formular);
             formular.KeyPreview = true;
             formular.FormBorderStyle = FormBorderStyle.None;

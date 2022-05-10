@@ -5,15 +5,18 @@ using System.Windows.Forms;
 namespace Pathfinder {
     class Menu {
 
-        public Label topBar;
+        public static Label topBar;
         private Button buttonResetare;
         private Button buttonIesire;
         private Button BFS;
         private Button DFS;
         private Button Maze;
+        private Label speed;
+        private Button speedUp;
+        private Button speedDown;
 
-        public static Button countObstacles;
-        public static Button exploredNodes;
+        public static Label countObstacles;
+        public static Label exploredNodes;
 
         public Menu() {
 
@@ -23,8 +26,12 @@ namespace Pathfinder {
             BFS = new Button() { Visible = true };
             DFS = new Button() { Visible = true };
             Maze = new Button() { Visible = true };
-            countObstacles = new Button() { Visible = true };
-            exploredNodes = new Button() { Visible = true };
+            speed = new Label() { Visible = true };
+            speedUp = new Button() { Visible = true };
+            speedDown = new Button() { Visible = true };
+
+            countObstacles = new Label() { Visible = true };
+            exploredNodes = new Label() { Visible = true };
 
             buttonResetare.FlatStyle = FlatStyle.Flat;
             buttonResetare.FlatAppearance.BorderSize = 0;
@@ -88,25 +95,56 @@ namespace Pathfinder {
 
 
             countObstacles.FlatStyle = FlatStyle.Flat;
-            countObstacles.FlatAppearance.BorderSize = 0;
             countObstacles.Text = "Obstacles: 0";
             countObstacles.Location = new Point(buttonResetare.Width + 1300, 0);
             countObstacles.ForeColor = Color.FromArgb(0, 207, 255);
             countObstacles.BackColor = Color.Black;
             countObstacles.Font = new Font("Nirmala UI", 11, FontStyle.Bold);
             countObstacles.Size = new Size(120, 20);
-            countObstacles.MouseEnter += Events.mouseEnterMenuButton;
-            
+
+
+            speed.FlatStyle = FlatStyle.Flat;
+            speed.Text = "&Speed";
+            speed.Location = new Point(buttonResetare.Width + 1000, 0);
+            speed.ForeColor = Color.FromArgb(0, 207, 255);
+            speed.BackColor = Color.Black;
+            speed.Font = new Font("Nirmala UI", 11, FontStyle.Bold);
+            speed.Size = new Size(50, 20);
+
+            speedUp.FlatStyle = FlatStyle.Flat;
+            speedUp.FlatAppearance.BorderSize = 0;
+            speedUp.Click += Events.speedUpClick;
+            speedUp.Text = "&+";
+            speedUp.Location = new Point(speed.Location.X + speed.Width);
+            speedUp.ForeColor = Color.FromArgb(0, 207, 255);
+            speedUp.BackColor = Color.Black;
+            speedUp.Font = new Font("Nirmala UI", 14, FontStyle.Bold);
+            speedUp.Size = new Size(30, 20);
+            speedUp.MouseEnter += Events.mouseEnterMenuButton;
+            speedUp.MouseLeave += Events.mouseLeaveMenuButton;
+
+
+            speedDown.FlatStyle = FlatStyle.Flat;
+            speedDown.FlatAppearance.BorderSize = 0;
+            speedDown.Click += Events.speedDownClick;
+            speedDown.Text = "&-";
+            speedDown.Location = new Point(speed.Location.X - speed.Width);
+            speedDown.ForeColor = Color.FromArgb(0, 207, 255);
+            speedDown.BackColor = Color.Black;
+            speedDown.Font = new Font("Nirmala UI", 11, FontStyle.Bold);
+            speedDown.Size = new Size(30, 20);
+            speedDown.MouseEnter += Events.mouseEnterMenuButton;
+            speedDown.MouseLeave += Events.mouseLeaveMenuButton;
+
 
             exploredNodes.FlatStyle = FlatStyle.Flat;
-            exploredNodes.FlatAppearance.BorderSize = 0;
             exploredNodes.Text = "Explored: 0";
             exploredNodes.Location = new Point(buttonResetare.Width + 1150, 0);
             exploredNodes.ForeColor = Color.FromArgb(0, 207, 255);
             exploredNodes.BackColor = Color.Black;
             exploredNodes.Font = new Font("Nirmala UI", 11, FontStyle.Bold);
             exploredNodes.Size = new Size(120, 20);
-            exploredNodes.MouseEnter += Events.mouseEnterMenuButton;
+
 
 
             topBar.Controls.Add(buttonIesire);
@@ -115,7 +153,10 @@ namespace Pathfinder {
             topBar.Controls.Add(exploredNodes);
             topBar.Controls.Add(BFS);
             topBar.Controls.Add(DFS);
+            topBar.Controls.Add(speed);
             topBar.Controls.Add(Maze);
+            topBar.Controls.Add(speedUp);
+            topBar.Controls.Add(speedDown);
         }
     }
 }

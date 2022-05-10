@@ -90,9 +90,11 @@ namespace Pathfinder {
         static public void clickResetare(object sender, EventArgs e) {
 
             for (int i = 0; i < Map.labeluri.GetLength(0); i++) 
-                for (int j = 0; j < Map.labeluri.GetLength(1); j++) Map.labeluri[i, j].BackColor = Map.initialLabelColor;
+                for (int j = 0; j < Map.labeluri.GetLength(1); j++) {
 
-
+                    Map.labeluri[i, j].BackColor = Map.initialLabelColor;
+                    Map.labeluri[i, j].Image = null;
+                }
 
 
             if(Map.source != null) {
@@ -128,11 +130,8 @@ namespace Pathfinder {
         static public void clickIesire(object sender, EventArgs e) {
 
             DialogResult answ = MessageBox.Show("Are you sure?", "Exit program", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (answ == DialogResult.Yes) {
+            if (answ == DialogResult.Yes) Application.ExitThread();
 
-                foreach (var i in Algorithm.runningAlgorithm) i.Abort();
-                Application.ExitThread();
-            }
         }
 
         static public void formClose(object sender, FormClosingEventArgs e) => clickIesire(sender, e); // for ALT+F4
@@ -180,5 +179,29 @@ namespace Pathfinder {
 
         }
 
+
+        static public void speedUpClick(object sender, EventArgs e) {
+
+            if (Algorithm.algorithmSpeed == Algorithm.AlgorithmSpeed.Paused) {
+                // daca trebuie sa pun pauza, deja opresc thread-ul
+                Algorithm.algorithmSpeed = Algorithm.AlgorithmSpeed.VerySlow;
+                Algorithm.runningAlgorithm[Algorithm.runningAlgorithm.Count - 1].Resume();
+            }
+
+            else if(Algorithm.algorithmSpeed > Algorithm.AlgorithmSpeed.Instant) Algorithm.algorithmSpeed -= 10;
+
+        }
+
+
+        static public void speedDownClick(object sender, EventArgs e) {
+
+            if (Algorithm.algorithmSpeed == Algorithm.AlgorithmSpeed.VerySlow) {
+                // daca trebuie sa pun pauza, deja opresc thread-ul
+                Algorithm.algorithmSpeed = Algorithm.AlgorithmSpeed.Paused;
+                Algorithm.runningAlgorithm[Algorithm.runningAlgorithm.Count - 1].Suspend();
+            }
+
+            else if (Algorithm.algorithmSpeed < Algorithm.AlgorithmSpeed.Paused) Algorithm.algorithmSpeed += 10;
+        }
     }
 }

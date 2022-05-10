@@ -18,27 +18,28 @@ namespace Pathfinder.Algorithms {
                 return;
             }
 
-            List<Label> visited = new List<Label>();
             bool stopFunction = false;
-            PreorderTraversal(Map.source, visited, ref stopFunction);
+            Helper(Map.source, Map.source, ref stopFunction);
+            DrawPath();
             algorithmState = AlgorithmState.Finished;
 
         }
 
     
-        public static void PreorderTraversal(Label sursa, List<Label> visited, ref bool stopFunciton) {
+        public void Helper(Label sursa, Label prev, ref bool stopFunciton) {
 
             if(sursa == Map.destination) {
 
+                path.Add(sursa, prev);
                 Map.destination.BackColor = Map.searchColorBorder;
                 Map.destination.Image = Map.destinationReachedImage;
                 stopFunciton = true;
                 return;
             }
 
-            visited.Add(sursa);
-            sursa.BackColor = Color.Gold;
-            Thread.Sleep(20);
+            path.Add(sursa, prev);
+            sursa.BackColor = Map.pathColor;
+            Thread.Sleep((int)algorithmSpeed);
             sursa.BackColor = Map.searchColor;
 
             #region Explored Nodes
@@ -49,17 +50,10 @@ namespace Pathfinder.Algorithms {
             #endregion
 
             foreach (var i in adjancecyList[sursa] as List<Label>) 
-                if (!visited.Contains(i) && stopFunciton == false) PreorderTraversal(i, visited, ref stopFunciton);
+                if (!path.Contains(i) && stopFunciton == false) Helper(i, sursa, ref stopFunciton);
 
         }
-    
-  
-
-        protected override void GetPath(out List<Label> path) {
-
-            base.GetPath(out path);
-
-        }
+ 
     }
 
 }

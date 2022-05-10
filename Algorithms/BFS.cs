@@ -21,25 +21,24 @@ namespace Pathfinder.Algorithms {
 
 
             Queue<Label> toVisit = new Queue<Label>();
-            List<Label> visited = new List<Label>();
             bool destinationReached = false;
 
             toVisit.Enqueue(Map.source);
-            visited.Add(Map.source);
+            path.Add(Map.source, Map.source);
 
             while (!destinationReached && toVisit.Count > 0) {
 
 
                 for (int i = 0; i < (adjancecyList[toVisit.Peek()] as List<Label>).Count; i++) {
 
-                    if (!visited.Contains((adjancecyList[toVisit.Peek()] as List<Label>)[i])) {
+                    if (!path.Contains((adjancecyList[toVisit.Peek()] as List<Label>)[i])) {
 
+                        path.Add((adjancecyList[toVisit.Peek()] as List<Label>)[i], toVisit.Peek());
                         toVisit.Enqueue((adjancecyList[toVisit.Peek()] as List<Label>)[i]);
-                        visited.Add((adjancecyList[toVisit.Peek()] as List<Label>)[i]);
-                        visited[visited.Count - 1].BackColor = Map.searchColorBorder;
+                        (adjancecyList[toVisit.Peek()] as List<Label>)[i].BackColor = Map.searchColorBorder;
 
 
-                        if (visited[visited.Count - 1] == Map.destination) {
+                        if ((adjancecyList[toVisit.Peek()] as List<Label>)[i] == Map.destination) {
 
                             destinationReached = true;
                             Map.destination.Image = Map.destinationReachedImage;
@@ -57,22 +56,18 @@ namespace Pathfinder.Algorithms {
                 Menu.exploredNodes.Text = splits[0] + " " + nr;
                 #endregion
 
-                toVisit.Peek().BackColor = Color.Gold;
-                Thread.Sleep(algorithmSpeed = 20);
+                toVisit.Peek().BackColor = Map.pathColor;
+                
+                Thread.Sleep((int)algorithmSpeed);
                 toVisit.Peek().BackColor = Map.searchColor;
                 toVisit.Dequeue();
 
             }
 
+            DrawPath();
             algorithmState = AlgorithmState.Finished;
-         
-        }
-
-
-        protected override void GetPath(out List<Label> path) {
-
-            base.GetPath(out path);
 
         }
+
     }
 }
