@@ -66,7 +66,6 @@ namespace Pathfinder {
                     labeluri[i, j].Name = i + " " + j;
                     labeluri[i, j].MouseLeave += Events.labelMouseLeave;
                     labeluri[i, j].MouseDown += Events.labelMouseDown;
-                    labeluri[i, j].BorderStyle = BorderStyle.None;
                     formular.Controls.Add(labeluri[i, j]);
                 }
             }

@@ -131,7 +131,7 @@ namespace Pathfinder {
             speedDown.Location = new Point(speed.Location.X - speed.Width);
             speedDown.ForeColor = Color.FromArgb(0, 207, 255);
             speedDown.BackColor = Color.Black;
-            speedDown.Font = new Font("Nirmala UI", 11, FontStyle.Bold);
+            speedDown.Font = new Font("Nirmala UI", 14, FontStyle.Bold);
             speedDown.Size = new Size(30, 20);
             speedDown.MouseEnter += Events.mouseEnterMenuButton;
             speedDown.MouseLeave += Events.mouseLeaveMenuButton;

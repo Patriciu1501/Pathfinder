@@ -33,9 +33,9 @@ namespace Pathfinder.Algorithms {
         public OrderedDictionary path;
         protected bool destinationFound;
 
-        static Algorithm() {
+        static Algorithm() {  // initializez membrii statici intr-un constructor static
 
-            algorithmSpeed = AlgorithmSpeed.VeryFast;
+            algorithmSpeed = AlgorithmSpeed.Standard;
             algorithmState = AlgorithmState.NeverFinished;
             runningAlgorithm = new List<Thread>();
         }
