@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -21,7 +20,6 @@ namespace Pathfinder.Algorithms {
 
 
             Queue<Label> toVisit = new Queue<Label>();
-
             toVisit.Enqueue(Map.source);
             path.Add(Map.source, Map.source);
 

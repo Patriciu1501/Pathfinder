@@ -2,26 +2,26 @@
 
     using System.Windows.Forms;
 
-    class Formular {
+    class Window {
 
-        public Form formular;
+        public Form form;
         public Menu menu;
         public Map map;
 
-        public Formular() {
+        public Window() {
 
 
-            formular = new Form();
+            form = new Form();
             menu = new Menu();
-            formular.Controls.Add(Menu.topBar);
-            map = new Map(formular);
-            formular.KeyPreview = true;
-            formular.FormBorderStyle = FormBorderStyle.None;
-            formular.WindowState = FormWindowState.Maximized;
-            formular.Text = "Proiect POO - Pathfinder";
-            formular.FormClosing += Events.formClose;
+            form.Controls.Add(Menu.topBar);
+            map = new Map(form);
+            form.KeyPreview = true;
+            form.FormBorderStyle = FormBorderStyle.None;
+            form.WindowState = FormWindowState.Maximized;
+            form.Text = "Proiect POO - Pathfinder";
+            form.FormClosing += Events.formClose;
 
-            Application.Run(formular);
+            Application.Run(form);
 
         }
     }

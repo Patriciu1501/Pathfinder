@@ -14,7 +14,7 @@ namespace Pathfinder {
 
             if (e.Button == MouseButtons.None && curr.Image == null && curr.BackColor == Map.initialLabelColor) curr.BackColor = Color.Aqua;
 
-            else if (!Map.startFlagAdded || !Map.destinationFlagAdded) return;
+            else if (!Map.sourceFlagAdded || !Map.destinationFlagAdded) return;
 
             else if (e.Button == MouseButtons.Left && curr.Image == null && curr.BackColor != Map.obstacleColor && Algorithm.algorithmState != Algorithm.AlgorithmState.Running) {
 
@@ -51,12 +51,12 @@ namespace Pathfinder {
             MouseEventArgs pressedButton = e as MouseEventArgs;
             Label curr = sender as Label;
 
-            if (Map.startFlagAdded == false) {
+            if (Map.sourceFlagAdded == false) {
 
                 curr.BackColor = Map.initialLabelColor;
                 curr.Image = Map.sourceImage;
                 Map.source = curr;
-                Map.startFlagAdded = true;
+                Map.sourceFlagAdded = true;
             }
 
             else if (Map.destinationFlagAdded == false && curr.Image == null) {
@@ -91,31 +91,27 @@ namespace Pathfinder {
 
             if (Algorithm.algorithmState == Algorithm.AlgorithmState.Running) {
 
+                if (Algorithm.algorithmSpeed == Algorithm.AlgorithmSpeed.Paused) {
+
+                    Algorithm.runningAlgorithm[Algorithm.runningAlgorithm.Count - 1].Resume();
+                    Algorithm.algorithmSpeed = Algorithm.AlgorithmSpeed.Standard;
+                }
+
                 Algorithm.runningAlgorithm[Algorithm.runningAlgorithm.Count - 1].Abort();
                 Algorithm.algorithmState = Algorithm.AlgorithmState.NeverFinished;
             }
 
-            for (int i = 0; i < Map.labeluri.GetLength(0); i++)
-                for (int j = 0; j < Map.labeluri.GetLength(1); j++) {
+            for (int i = 0; i < Map.labels.GetLength(0); i++)
+                for (int j = 0; j < Map.labels.GetLength(1); j++) {
 
-                    Map.labeluri[i, j].BackColor = Map.initialLabelColor;
-                    Map.labeluri[i, j].Image = null;
+                    Map.labels[i, j].BackColor = Map.initialLabelColor;
+                    Map.labels[i, j].Image = null;
                 }
 
 
-            if (Map.source != null) {
-
-                Map.source.Image = null;
-                Map.source = null;
-            }
-
-            if (Map.destination != null) {
-
-                Map.destination.Image = null;
-                Map.destination = null;
-            }
-
-            Map.startFlagAdded = false;
+            Map.source = null;
+            Map.destination = null;
+            Map.sourceFlagAdded = false;
             Map.destinationFlagAdded = false;
             Menu.countObstacles.Text = "Obstacles: 0";
             Menu.exploredNodes.Text = "Explored: 0";
@@ -182,7 +178,7 @@ namespace Pathfinder {
         static public void speedUpClick(object sender, EventArgs e) {
 
             if (Algorithm.algorithmSpeed == Algorithm.AlgorithmSpeed.Paused) {
-                // daca trebuie sa pun pauza, deja opresc thread-ul
+                
                 Algorithm.algorithmSpeed = Algorithm.AlgorithmSpeed.VerySlow;
                 Algorithm.runningAlgorithm[Algorithm.runningAlgorithm.Count - 1].Resume();
             }

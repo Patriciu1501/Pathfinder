@@ -23,15 +23,14 @@ namespace Pathfinder {
         public static readonly Image destinationImage;
         public static readonly Image destinationReachedImage;
 
-        public static Label[,] labeluri;
+        public static Label[,] labels;
+        public const string labelCost = "0";
         public static Label source, destination;
-        public static bool startFlagAdded;
+        public static bool sourceFlagAdded;
         public static bool destinationFlagAdded;
 
-        
 
-
-        static Map() { // se preia locatia proiectului apoi se seteaza imaginile pentru sursa si destinatie
+        static Map() { 
 
             string projectPath = @"location";
             string fullPath;
@@ -47,32 +46,32 @@ namespace Pathfinder {
 
         }
 
-        public Map(Form formular) {
+        public Map(Form form) {
 
             
-            labeluri = new Label[heightForm, widthForm];
+            labels = new Label[heightForm, widthForm];
             int height = Menu.topBar.Height;
 
 
-            for (int i = 0; i < labeluri.GetLength(0); i++) {
+            for (int i = 0; i < labels.GetLength(0); i++) {
 
                 if (i > 0) height += 40;
 
-                for (int j = 0; j < labeluri.GetLength(1); j++) {
+                for (int j = 0; j < labels.GetLength(1); j++) {
 
-                    labeluri[i, j] = new Label() { Visible = true, Width = 45, Height = 40, BackColor = initialLabelColor };
-                    labeluri[i, j].Location = new Point(j > 0 ? labeluri[i, j - 1].Location.X + labeluri[i, j - 1].Width  - 3: 0, height);
-                    labeluri[i, j].MouseMove += Events.labelMouseMove;
-                    labeluri[i, j].Name = i + " " + j;
-                    labeluri[i, j].MouseLeave += Events.labelMouseLeave;
-                    labeluri[i, j].MouseDown += Events.labelMouseDown;
-                    formular.Controls.Add(labeluri[i, j]);
+                    labels[i, j] = new Label() { Visible = true, Width = 45, Height = 40, BackColor = initialLabelColor };
+                    labels[i, j].Location = new Point(j > 0 ? labels[i, j - 1].Location.X + labels[i, j - 1].Width  - 3: 0, height);
+                    labels[i, j].MouseMove += Events.labelMouseMove;
+                    labels[i, j].Name = i + " " + j + " " + labelCost;
+                    labels[i, j].MouseLeave += Events.labelMouseLeave;
+                    labels[i, j].MouseDown += Events.labelMouseDown;
+                    form.Controls.Add(labels[i, j]);
                 }
             }
         }
 
 
-        public static Tuple<int, int> getPos(string name) {
+        public static Tuple<int, int> GetPos(string name) {
 
             Tuple<int, int> result;
             string[] splits = name.Split(' ');

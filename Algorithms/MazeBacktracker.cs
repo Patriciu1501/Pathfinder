@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 
 namespace Pathfinder.Algorithms {
-    class MazeBacktracker:Algorithm {
+    class MazeBacktracker: Algorithm {
 
 
         public static Random randomNumber;
@@ -17,14 +15,20 @@ namespace Pathfinder.Algorithms {
             // aici nu am base apel pentru ca e nevoie de un comportament mai diferit a metodei respective, ea nefiind una de pathfinding
             if (algorithmState == AlgorithmState.Running || algorithmState == AlgorithmState.Finished) {
 
+                if (algorithmSpeed == AlgorithmSpeed.Paused) {
+
+                    runningAlgorithm[runningAlgorithm.Count - 2].Resume();
+                    algorithmSpeed = AlgorithmSpeed.Standard;
+                }
+
                 runningAlgorithm[runningAlgorithm.Count - 2].Abort();
                 runningAlgorithm.RemoveAt(runningAlgorithm.Count - 2);
 
-                for (int i = 0; i < Map.labeluri.GetLength(0); i++)
-                    for (int j = 0; j < Map.labeluri.GetLength(1); j++)
+                for (int i = 0; i < Map.labels.GetLength(0); i++)
+                    for (int j = 0; j < Map.labels.GetLength(1); j++)
                          {
-                            Map.labeluri[i, j].BackColor = Map.initialLabelColor;
-                            Map.labeluri[i, j].Image = null;
+                            Map.labels[i, j].BackColor = Map.initialLabelColor;
+                            Map.labels[i, j].Image = null;
                         }
                             
             }
@@ -32,7 +36,7 @@ namespace Pathfinder.Algorithms {
             Map.source = null;
             Map.destination = null;
             Map.destinationFlagAdded = false;
-            Map.startFlagAdded = false;
+            Map.sourceFlagAdded = false;
             randomNumber = new Random();
             neighbours = new Dictionary<Label, List<Label>>();
             permanentPairs = new List<Tuple<Label, Label>>();
@@ -40,7 +44,7 @@ namespace Pathfinder.Algorithms {
             algorithmState = AlgorithmState.Running;
 
 
-            Helper(Map.labeluri[0, 0]);
+            Helper(Map.labels[0, 0]);
 
 
             List<string> labelsNames = new List<string>();
@@ -54,19 +58,19 @@ namespace Pathfinder.Algorithms {
 
             Thread.Sleep(300);
 
-            for (int i = 0; i < Map.labeluri.GetLength(0); i++) {
+            for (int i = 0; i < Map.labels.GetLength(0); i++) {
 
-                for (int j = 0; j < Map.labeluri.GetLength(1); j++) {
+                for (int j = 0; j < Map.labels.GetLength(1); j++) {
 
-                    if (!labelsNames.Contains(Map.labeluri[i, j].Name)) {
+                    if (!labelsNames.Contains(Map.labels[i, j].Name)) {
 
-                        Map.labeluri[i, j].BackColor = Map.obstacleColor;
+                        Map.labels[i, j].BackColor = Map.obstacleColor;
                     }
                 }
             }
 
 
-            Menu.countObstacles.Text = "Obstacles: " + (Map.labeluri.Length - labelsNames.Count);
+            Menu.countObstacles.Text = "Obstacles: " + (Map.labels.Length - labelsNames.Count);
             algorithmState = AlgorithmState.Finished;
             Thread.Sleep(500);
         }
@@ -78,7 +82,7 @@ namespace Pathfinder.Algorithms {
             if (neighbours.ContainsKey(curr)) return;
 
             //EntryPoint.fisier.WriteLine("\n*" + curr.Name + "*");
-            Tuple<int, int> currPos = Map.getPos(curr.Name);
+            Tuple<int, int> currPos = Map.GetPos(curr.Name);
             List<Label> vecini = adjancecyList[curr] as List<Label>;
             neighbours.Add(curr, new List<Label>());
  
@@ -90,7 +94,7 @@ namespace Pathfinder.Algorithms {
 
                 for (int j = 0; j < farVecini.Count; j++) {
 
-                    Tuple<int, int> farNPos = Map.getPos(farVecini[j].Name);
+                    Tuple<int, int> farNPos = Map.GetPos(farVecini[j].Name);
 
                     if (!neighbours.ContainsKey(farVecini[j]) && (currPos.Item1 == farNPos.Item1 || currPos.Item2 == farNPos.Item2)) 
                         neighbours[curr].Add(farVecini[j]);
@@ -121,8 +125,8 @@ namespace Pathfinder.Algorithms {
 
             string result = string.Empty;
 
-            Tuple<int, int> firstEntity = Map.getPos(pair.Item1.Name);
-            Tuple<int, int> secondEntity = Map.getPos(pair.Item2.Name);
+            Tuple<int, int> firstEntity = Map.GetPos(pair.Item1.Name);
+            Tuple<int, int> secondEntity = Map.GetPos(pair.Item2.Name);
 
             if(firstEntity.Item1 == secondEntity.Item1) {
 
