@@ -7,7 +7,7 @@ using System.Windows.Forms;
 namespace Pathfinder {
 
 
-    class Map {
+    static class Map {
 
         private const byte labelsRowNumber = 25;
         private const byte labelsColumnNumber = 31;
@@ -34,11 +34,11 @@ namespace Pathfinder {
         public static bool sourceFlagAdded;
         public static bool destinationFlagAdded;
 
-        public static bool gridOn;
         public static bool weightedGraph;
         public static int weightedNodes;
-
         public static Cursor weightedCursor;
+
+        public static bool buildMap;
 
 
         static Map() { 
@@ -64,19 +64,11 @@ namespace Pathfinder {
             searchColor = Color.FromArgb(103, 223, 255);
             searchColorBorder = Color.FromArgb(128, 196, 255);
             pathColor = Color.FromArgb(248, 255, 78);
-
-
             weightedCursor = new Cursor(fullPath + "weightedCursor.cur");
-          
 
-        }
-
-
-        public Map(Form form) {
-    
             labels = new OOPLabel[labelsRowNumber, labelsColumnNumber];
             int height = Menu.topBar.Height;
-     
+
             for (int i = 0; i < labels.GetLength(0); i++) {
 
                 if (i > 0) height += labelHeight;
@@ -84,18 +76,19 @@ namespace Pathfinder {
                 for (int j = 0; j < labels.GetLength(1); j++) {
 
                     labels[i, j] = new OOPLabel() { Visible = true, Width = labelWidth, Height = labelHeight, BackColor = initialLabelColor };
-                    labels[i, j].Location = new Point(j > 0 ? labels[i, j - 1].Location.X + labels[i, j - 1].Width: 0, height);
+                    labels[i, j].Location = new Point(j > 0 ? labels[i, j - 1].Location.X + labels[i, j - 1].Width : 0, height);
                     labels[i, j].MouseMove += Events.labelMouseMove;
                     labels[i, j].Name = i + " " + j;
                     labels[i, j].Weight = labels[i, j].UnweightValue;
                     labels[i, j].MouseLeave += Events.labelMouseLeave;
                     labels[i, j].MouseDown += Events.labelMouseDown;
-                    if(gridOn) labels[i, j].Paint += Events.PaintGrid;
-                    form.Controls.Add(labels[i, j]);
+                    if(Window.gridOn) labels[i, j].Paint += Events.PaintGrid;
+                    Window.form.Controls.Add(labels[i, j]);
                 }
             }
-        }
 
+
+        }
 
         public static Tuple<int, int> GetPos(string name) {
 

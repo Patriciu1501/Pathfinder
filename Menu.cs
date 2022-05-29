@@ -4,23 +4,23 @@ using System.Windows.Forms;
 
 
 namespace Pathfinder {
-    class Menu {
+    static class Menu {
 
         private static readonly int topBarHeight = Window.height / 36;
 
-        private readonly Font menuButtonFont = new Font("Nirmala UI", 11, FontStyle.Bold);
-        private readonly Size resetButtonSize = new Size(Window.width / 24, Window.height / 43);
-        private readonly Size exitButtonSize = new Size(Window.width / 24, Window.height / 43);
-        private readonly Size BFSButtonSize = new Size(Window.width / 24, Window.height / 43);
-        private readonly Size DFSButtonSize = new Size(Window.width / 24, Window.height / 43);
-        private readonly Size DijkstraButtonSize = new Size(Window.width / 16, Window.height / 43);
-        private readonly Size AStarButtonSize = new Size(Window.width / 24, Window.height / 43);
-        private readonly Size weightButtonSize = new Size(Window.width / 14, Window.height / 43);
-        private readonly Size MazeButtonSize = new Size(Window.width / 24, Window.height / 43);
-        private readonly Size speedLabelSize = new Size(Window.width / 28, Window.height / 43);
-        private readonly Size speedUpButtonSize = new Size(Window.width / 64, Window.height / 43);
-        private readonly Size speedDownButtonSize = new Size(Window.width / 64, Window.height / 43);
-        private readonly Size topBarSize = new Size(Window.width, topBarHeight);
+        private static readonly Font menuButtonFont = new Font("Nirmala UI", 11, FontStyle.Bold);
+        private static readonly Size resetButtonSize = new Size(Window.width / 24, Window.height / 43);
+        private static readonly Size exitButtonSize = new Size(Window.width / 24, Window.height / 43);
+        private static readonly Size BFSButtonSize = new Size(Window.width / 24, Window.height / 43);
+        private static readonly Size DFSButtonSize = new Size(Window.width / 24, Window.height / 43);
+        private static readonly Size DijkstraButtonSize = new Size(Window.width / 16, Window.height / 43);
+        private static readonly Size AStarButtonSize = new Size(Window.width / 24, Window.height / 43);
+        private static readonly Size weightButtonSize = new Size(Window.width / 14, Window.height / 43);
+        private static readonly Size MazeButtonSize = new Size(Window.width / 24, Window.height / 43);
+        private static readonly Size speedLabelSize = new Size(Window.width / 28, Window.height / 43);
+        private static readonly Size speedUpButtonSize = new Size(Window.width / 64, Window.height / 43);
+        private static readonly Size speedDownButtonSize = new Size(Window.width / 64, Window.height / 43);
+        private static readonly Size topBarSize = new Size(Window.width, topBarHeight);
 
         public static Button resetButton;
         public static Button exitButton;
@@ -39,7 +39,7 @@ namespace Pathfinder {
         public static Label countObstaclesLabel;
         public static Label exploredNodesLabel;
 
-        public Menu() {
+        static Menu() {
 
             topBar = new Label() { Visible = true, BackColor = Color.Black, Size = topBarSize};
             resetButton = new Button() { Visible = true };
