@@ -1,36 +1,46 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Drawing;
-using System.Collections.Specialized;
 using Pathfinder.Algorithms;
 using System.Threading;
 
 namespace Pathfinder {
     public static class Events {
 
+
+        private static bool destinationDragging = false;
+
         static public void labelMouseMove(object sender, MouseEventArgs e) {
 
-            Label curr = sender as Label;
+            OOPLabel curr = sender as OOPLabel;
 
-            if (e.Button == MouseButtons.None && curr.Image == null && curr.BackColor == Map.initialLabelColor) curr.BackColor = Color.Aqua;
+            if (curr == Map.destination && e.Button == MouseButtons.Left && Algorithm.algorithmState == Algorithm.AlgorithmState.Finished) destinationDragging = true;
+
+            else if (destinationDragging && curr != Map.destination && curr.BackColor != Map.obstacleColor && e.Button == MouseButtons.Left) {
+
+                Map.destination = curr;
+                Algorithm.algorithmSpeed = Algorithm.AlgorithmSpeed.Instant;
+
+                if (Algorithm.algorithmName == Algorithm.AlgorithmName.BFS) BFSClick(sender, e);
+                else if (Algorithm.algorithmName == Algorithm.AlgorithmName.DFS) DFSClick(sender, e);
+
+            }
+
+            else if (destinationDragging && curr != Map.destination && e.Button == MouseButtons.None) destinationDragging = false;
+
+            else if (e.Button == MouseButtons.None && curr.Image == null && curr.BackColor == Map.initialLabelColor) curr.BackColor = Color.Aqua;
 
             else if (!Map.sourceFlagAdded || !Map.destinationFlagAdded) return;
 
             else if (e.Button == MouseButtons.Left && curr.Image == null && curr.BackColor != Map.obstacleColor && Algorithm.algorithmState != Algorithm.AlgorithmState.Running) {
 
-                string[] splits = Menu.countObstacles.Text.Split(' ');
-                int nr = Convert.ToInt32(splits[1]);
-                nr++;
-                Menu.countObstacles.Text = splits[0] + " " + nr;
+                Menu.ModifyCountObstacles(increment: true);
                 curr.BackColor = Map.obstacleColor;
             }
 
             else if (e.Button == MouseButtons.Right && curr.BackColor == Map.obstacleColor && Algorithm.algorithmState != Algorithm.AlgorithmState.Running) {
 
-                string[] splits = Menu.countObstacles.Text.Split(' ');
-                int nr = Convert.ToInt32(splits[1]);
-                nr--;
-                Menu.countObstacles.Text = splits[0] + " " + nr;
+                Menu.ModifyCountObstacles(increment: false);
                 curr.BackColor = Map.initialLabelColor;
             }
 
@@ -40,7 +50,7 @@ namespace Pathfinder {
 
         static public void labelMouseLeave(object sender, EventArgs e) {
 
-            Label curr = sender as Label;
+            OOPLabel curr = sender as OOPLabel;
 
             if (curr.BackColor == Color.Aqua) curr.BackColor = Map.initialLabelColor;
         }
@@ -49,9 +59,9 @@ namespace Pathfinder {
         static public void labelMouseDown(object sender, EventArgs e) {
 
             MouseEventArgs pressedButton = e as MouseEventArgs;
-            Label curr = sender as Label;
+            OOPLabel curr = sender as OOPLabel;
 
-            if (Map.sourceFlagAdded == false) {
+            if (Map.sourceFlagAdded == false && curr.BackColor != Map.obstacleColor) {
 
                 curr.BackColor = Map.initialLabelColor;
                 curr.Image = Map.sourceImage;
@@ -59,7 +69,7 @@ namespace Pathfinder {
                 Map.sourceFlagAdded = true;
             }
 
-            else if (Map.destinationFlagAdded == false && curr.Image == null) {
+            else if (Map.destinationFlagAdded == false && curr.Image == null && curr.BackColor != Map.obstacleColor) {
 
                 curr.BackColor = Map.initialLabelColor;
                 curr.Image = Map.destinationImage;
@@ -69,36 +79,30 @@ namespace Pathfinder {
 
             else if (MouseButtons.Left == pressedButton.Button && curr.Image == null && curr.BackColor != Map.obstacleColor && Algorithm.algorithmState != Algorithm.AlgorithmState.Running) {
 
-                string[] splits = Menu.countObstacles.Text.Split(' ');
-                int nr = Convert.ToInt32(splits[1]);
-                nr++;
-                Menu.countObstacles.Text = splits[0] + " " + nr;
+                Menu.ModifyCountObstacles(increment: true);
                 curr.BackColor = Map.obstacleColor;
             }
 
             else if (MouseButtons.Right == pressedButton.Button && curr.BackColor == Map.obstacleColor && Algorithm.algorithmState != Algorithm.AlgorithmState.Running) {
 
-                string[] splits = Menu.countObstacles.Text.Split(' ');
-                int nr = Convert.ToInt32(splits[1]);
-                nr--;
-                Menu.countObstacles.Text = splits[0] + " " + nr;
+                Menu.ModifyCountObstacles(increment: false);
                 curr.BackColor = Map.initialLabelColor;
             }
         }
 
 
-        static public void clickResetare(object sender, EventArgs e) {
+        static public void resetClick(object sender, EventArgs e) {
 
             if (Algorithm.algorithmState == Algorithm.AlgorithmState.Running) {
 
+                
                 if (Algorithm.algorithmSpeed == Algorithm.AlgorithmSpeed.Paused) {
 
                     Algorithm.runningAlgorithm[Algorithm.runningAlgorithm.Count - 1].Resume();
                     Algorithm.algorithmSpeed = Algorithm.AlgorithmSpeed.Standard;
                 }
 
-                Algorithm.runningAlgorithm[Algorithm.runningAlgorithm.Count - 1].Abort();
-                Algorithm.algorithmState = Algorithm.AlgorithmState.NeverFinished;
+                for (int i = 0; i < Algorithm.runningAlgorithm.Count; i++) Algorithm.runningAlgorithm[i].Abort();             
             }
 
             for (int i = 0; i < Map.labels.GetLength(0); i++)
@@ -113,23 +117,25 @@ namespace Pathfinder {
             Map.destination = null;
             Map.sourceFlagAdded = false;
             Map.destinationFlagAdded = false;
-            Menu.countObstacles.Text = "Obstacles: 0";
-            Menu.exploredNodes.Text = "Explored: 0";
-            Algorithm.adjancecyList = new OrderedDictionary();    
-            MazeBacktracker.permanentPairs = new System.Collections.Generic.List<Tuple<Label, Label>>();
-            MazeBacktracker.neighbours = new System.Collections.Generic.Dictionary<Label, System.Collections.Generic.List<Label>>();
+            Menu.ResetCountObstacles();
+            Menu.ResetExploredNodes();
+            Algorithm.algorithmState = Algorithm.AlgorithmState.NeverFinished;
         }
 
 
 
-        static public void clickIesire(object sender, EventArgs e) {
+        static public void exitClick(object sender, EventArgs e) {
 
             DialogResult answ = MessageBox.Show("Are you sure?", "Exit program", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (answ == DialogResult.Yes) Application.ExitThread();
+            if (answ == DialogResult.Yes) {
 
+                if(Algorithm.runningAlgorithm.Count != 0) Algorithm.runningAlgorithm[0].Abort();
+                Tutorial.runningNotifier.Abort();
+                Application.ExitThread();            
+            }
         }
 
-        static public void formClose(object sender, FormClosingEventArgs e) => clickIesire(sender, e); // for ALT+F4
+        static public void formClose(object sender, FormClosingEventArgs e) => exitClick(sender, e); 
 
         static public void mouseEnterMenuButton(object sender, EventArgs e) {
 
@@ -183,7 +189,8 @@ namespace Pathfinder {
                 Algorithm.runningAlgorithm[Algorithm.runningAlgorithm.Count - 1].Resume();
             }
 
-            else if (Algorithm.algorithmSpeed > Algorithm.AlgorithmSpeed.Instant) Algorithm.algorithmSpeed -= 10;
+            else if (Algorithm.algorithmSpeed > Algorithm.AlgorithmSpeed.Instant) Algorithm.algorithmSpeed -= 20;
+            Tutorial.speedModified = true;
 
         }
 
@@ -196,9 +203,21 @@ namespace Pathfinder {
                 Algorithm.runningAlgorithm[Algorithm.runningAlgorithm.Count - 1].Suspend();
             }
 
-            else if (Algorithm.algorithmSpeed <= Algorithm.AlgorithmSpeed.Paused) Algorithm.algorithmSpeed += 10;
+            else if (Algorithm.algorithmSpeed <= Algorithm.AlgorithmSpeed.Paused) Algorithm.algorithmSpeed += 20;
+            Tutorial.speedModified = true;
         }
 
+
+        static public void PaintGrid(object sender, PaintEventArgs e) {
+
+            ControlPaint.DrawBorder(e.Graphics, (sender as OOPLabel).DisplayRectangle, Color.Black, ButtonBorderStyle.Outset);
+        }
+        
+
+        static public void DeleteGrid(object sender, PaintEventArgs e) {
+
+            ControlPaint.DrawBorder(e.Graphics, (sender as OOPLabel).DisplayRectangle, Color.DarkGray, ButtonBorderStyle.None);
+        }
 
     }
 }

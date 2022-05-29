@@ -8,27 +8,14 @@ namespace Pathfinder.Algorithms {
 
     
 
-    class Algorithm {
+    partial class Algorithm {
 
-        public enum AlgorithmState{ Running, Finished, NeverFinished }   // am creat asta ca sa pot reincepe un algoritm in momentul cand s-a terminat
-        public static AlgorithmState algorithmState;// doar cand e neverfinished nu se va sterge practic totul de pe map
-        public enum AlgorithmSpeed: byte { 
-
-            Paused = 200, 
-            VerySlow = 100, 
-            Slow = 80, 
-            Standard = 60, 
-            Fast = 40, 
-            VeryFast = 20,
-            Instant = 0
-        
-        };
+        public static AlgorithmState algorithmState;
         public static AlgorithmSpeed algorithmSpeed;
-
-
+        public static AlgorithmName algorithmName;
         public static List<Thread> runningAlgorithm;
         public List<Thread> RunningAlgorithm { get => runningAlgorithm; set => runningAlgorithm = value; } // fac asta ca sa pot accesa membrul static in asociere cu un obiect
-        public static OrderedDictionary adjancecyList;
+        public OrderedDictionary adjancecyList;
         public OrderedDictionary path;
         protected bool destinationFound;
 
@@ -70,7 +57,7 @@ namespace Pathfinder.Algorithms {
                 Map.destination.Image = Map.destinationImage;
                 Map.source.Image = Map.sourceSearchesImage;
                 Map.source.BackColor = Map.searchColor;
-                Menu.exploredNodes.Text = "Explored: 0";
+                Menu.exploredNodesLabel.Text = "Explored: 0";
             }
 
             destinationFound = false;
@@ -112,7 +99,7 @@ namespace Pathfinder.Algorithms {
             }
         }
 
-        public static void createAdjencecyList() {
+        public void createAdjencecyList() {
 
 
             adjancecyList = new OrderedDictionary();

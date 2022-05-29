@@ -5,7 +5,6 @@ namespace Pathfinder {
         static void Main() {
 
             Window app = new Window();
-
         }
     }
 }

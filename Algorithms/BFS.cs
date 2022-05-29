@@ -18,7 +18,8 @@ namespace Pathfinder.Algorithms {
                 return;
             }
 
-
+            algorithmName = AlgorithmName.BFS;
+            Tutorial.algorithmLaunched = true;
             Queue<Label> toVisit = new Queue<Label>();
             toVisit.Enqueue(Map.source);
             path.Add(Map.source, Map.source);
@@ -38,6 +39,7 @@ namespace Pathfinder.Algorithms {
                         if ((adjancecyList[toVisit.Peek()] as List<Label>)[i] == Map.destination) {
 
                             destinationFound = true;
+                            Tutorial.destinationFound = true;
                             Map.destination.Image = Map.destinationReachedImage;
                             Map.destination.BackColor = Map.searchColorBorder;
                             break;
@@ -46,15 +48,8 @@ namespace Pathfinder.Algorithms {
 
                 }
 
-                #region Explored Nodes
-                string[] splits = Menu.exploredNodes.Text.Split(' ');
-                int nr = Convert.ToInt32(splits[1]);
-                nr++;
-                Menu.exploredNodes.Text = splits[0] + " " + nr;
-                #endregion
-
+                Menu.ModifyExploredNodes();
                 toVisit.Peek().BackColor = Map.pathColor;
-                
                 Thread.Sleep((int)algorithmSpeed);
                 toVisit.Peek().BackColor = Map.searchColor;
                 toVisit.Dequeue();

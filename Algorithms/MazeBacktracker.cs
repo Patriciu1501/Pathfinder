@@ -6,45 +6,26 @@ using System.Windows.Forms;
 namespace Pathfinder.Algorithms {
     class MazeBacktracker: Algorithm {
 
+        private Random randomNumber;
+        private List<Tuple<Label, Label>> permanentPairs;
+        private Dictionary<Label, List<Label>> neighbours;
+        private OOPLabel startPoint;
 
-        public static Random randomNumber;
-        public static List<Tuple<Label, Label>> permanentPairs;
-        public static Dictionary<Label, List<Label>> neighbours;
         public override void StartAlgorithm() {
 
-            // aici nu am base apel pentru ca e nevoie de un comportament mai diferit a metodei respective, ea nefiind una de pathfinding
-            if (algorithmState == AlgorithmState.Running || algorithmState == AlgorithmState.Finished) {
+            Events.resetClick(new object(), new EventArgs());
 
-                if (algorithmSpeed == AlgorithmSpeed.Paused) {
-
-                    runningAlgorithm[runningAlgorithm.Count - 2].Resume();
-                    algorithmSpeed = AlgorithmSpeed.Standard;
-                }
-
-                runningAlgorithm[runningAlgorithm.Count - 2].Abort();
-                runningAlgorithm.RemoveAt(runningAlgorithm.Count - 2);
-
-                for (int i = 0; i < Map.labels.GetLength(0); i++)
-                    for (int j = 0; j < Map.labels.GetLength(1); j++)
-                         {
-                            Map.labels[i, j].BackColor = Map.initialLabelColor;
-                            Map.labels[i, j].Image = null;
-                        }
-                            
-            }
-
-            Map.source = null;
-            Map.destination = null;
-            Map.destinationFlagAdded = false;
-            Map.sourceFlagAdded = false;
+            algorithmName = AlgorithmName.Maze;
+            algorithmState = AlgorithmState.Running;
+            Tutorial.algorithmLaunched = true;
+            Menu.countObstaclesLabel.Text = "Obstacles: 0";
             randomNumber = new Random();
             neighbours = new Dictionary<Label, List<Label>>();
             permanentPairs = new List<Tuple<Label, Label>>();
             createAdjencecyList();
-            algorithmState = AlgorithmState.Running;
 
-
-            Helper(Map.labels[0, 0]);
+            startPoint = Map.labels[0, 0];
+            Helper(startPoint, neighbours, permanentPairs);
 
 
             List<string> labelsNames = new List<string>();
@@ -64,24 +45,26 @@ namespace Pathfinder.Algorithms {
 
                     if (!labelsNames.Contains(Map.labels[i, j].Name)) {
 
+                        string[] splits = Menu.countObstaclesLabel.Text.Split(' ');
+                        int nr = Convert.ToInt32(splits[1]);
+                        nr++;
+                        Menu.countObstaclesLabel.Text = splits[0] + " " + nr;
                         Map.labels[i, j].BackColor = Map.obstacleColor;
                     }
                 }
             }
 
 
-            Menu.countObstacles.Text = "Obstacles: " + (Map.labels.Length - labelsNames.Count);
             algorithmState = AlgorithmState.Finished;
             Thread.Sleep(500);
         }
 
 
 
-        static void Helper(Label curr) {
+        private void Helper(Label curr, Dictionary<Label, List<Label>> neighbours, List<Tuple<Label, Label>> permanentPairs) {
 
             if (neighbours.ContainsKey(curr)) return;
 
-            //EntryPoint.fisier.WriteLine("\n*" + curr.Name + "*");
             Tuple<int, int> currPos = Map.GetPos(curr.Name);
             List<Label> vecini = adjancecyList[curr] as List<Label>;
             neighbours.Add(curr, new List<Label>());
@@ -108,20 +91,18 @@ namespace Pathfinder.Algorithms {
                 
                 int value = randomNumber.Next(0, neighbours[curr].Count);
                 
-                //EntryPoint.fisier.WriteLine(curr.Name + "->" + neighbours[curr][value].Name);
                 if (!neighbours.ContainsKey(neighbours[curr][value])) {
 
                     permanentPairs.Add(Tuple.Create(curr, neighbours[curr][value]));
-                    Helper(neighbours[curr][value]);
+                    Helper(neighbours[curr][value], neighbours, permanentPairs);
                 }
                 neighbours[curr].RemoveAt(value);
             }
-
             
         }
        
 
-        static string Middle(Tuple<Label,Label> pair) {
+        private string Middle(Tuple<Label,Label> pair) {
 
             string result = string.Empty;
 

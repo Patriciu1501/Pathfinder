@@ -1,26 +1,32 @@
 ﻿namespace Pathfinder {
-
+    
     using System.Windows.Forms;
+
+
 
     class Window {
 
-        public Form form;
-        public Menu menu;
-        public Map map;
+        public static readonly int width = Screen.PrimaryScreen.Bounds.Width;
+        public static readonly int height = Screen.PrimaryScreen.Bounds.Height;
+
+
+        Form form;
+        Menu menu;
+        Map map;
+      
 
         public Window() {
 
-
             form = new Form();
             menu = new Menu();
-            form.Controls.Add(Menu.topBar);
-            map = new Map(form);
-            form.KeyPreview = true;
+            form.Controls.Add(menu.topBar);
+            new Map(form);
             form.FormBorderStyle = FormBorderStyle.None;
             form.WindowState = FormWindowState.Maximized;
-            form.Text = "Proiect POO - Pathfinder";
+            form.Text = "Pathfinder by Bogatu Patriciu";
             form.FormClosing += Events.formClose;
 
+            Tutorial.runningNotifier.Start();
             Application.Run(form);
 
         }

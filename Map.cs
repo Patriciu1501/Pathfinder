@@ -6,26 +6,30 @@ using System.Windows.Forms;
 
 namespace Pathfinder {
 
+
     class Map {
 
-        public const int heightForm = 21;
-        public const int widthForm = 37;
+        private const byte labelsRowNumber = 25;
+        private const byte labelsColumnNumber = 31;
 
-        public static readonly Color initialLabelColor = Color.FromArgb(179, 239, 255);
-        public static readonly Color obstacleColor = Color.FromArgb(40, 50, 90);
-        public static readonly Color searchColor = Color.FromArgb(103, 223, 255);
-        public static readonly Color searchColorBorder = Color.FromArgb(128, 196, 255);
-        public static readonly Color pathColor = Color.FromArgb(248, 255, 78);
+        private static readonly int labelHeight = (Window.height - Menu.GetTopBarHeight()) / labelsRowNumber;
+        private static readonly int labelWidth = Window.width / labelsColumnNumber + 1; 
 
+        public static readonly Color initialLabelColor;
+        public static readonly Color obstacleColor;
+        public static readonly Color searchColor;
+        public static readonly Color searchColorBorder;
+        public static readonly Color pathColor;
+                                                      
         public static readonly Image sourceImage;
         public static readonly Image sourceSearchesImage;
         public static readonly Image sourcePath;
         public static readonly Image destinationImage;
         public static readonly Image destinationReachedImage;
 
-        public static Label[,] labels;
-        public const string labelCost = "0";
-        public static Label source, destination;
+        
+        public static OOPLabel[,] labels;
+        public static OOPLabel source, destination;
         public static bool sourceFlagAdded;
         public static bool destinationFlagAdded;
 
@@ -44,27 +48,35 @@ namespace Pathfinder {
             destinationImage = Image.FromFile(fullPath + "destination.png");
             destinationReachedImage = Image.FromFile(fullPath + "destinationReached.png");
 
+            initialLabelColor = Color.FromArgb(179, 239, 255);
+            obstacleColor = Color.FromArgb(40, 50, 90);
+            searchColor = Color.FromArgb(103, 223, 255);
+            searchColorBorder = Color.FromArgb(128, 196, 255);
+            pathColor = Color.FromArgb(248, 255, 78);
+
         }
 
+
         public Map(Form form) {
-
-            
-            labels = new Label[heightForm, widthForm];
-            int height = Menu.topBar.Height;
-
-
+    
+            labels = new OOPLabel[labelsRowNumber, labelsColumnNumber];
+            int height = Menu.GetTopBarHeight();
+     
             for (int i = 0; i < labels.GetLength(0); i++) {
 
-                if (i > 0) height += 40;
+                if (i > 0) height += labelHeight;
 
                 for (int j = 0; j < labels.GetLength(1); j++) {
 
-                    labels[i, j] = new Label() { Visible = true, Width = 45, Height = 40, BackColor = initialLabelColor };
-                    labels[i, j].Location = new Point(j > 0 ? labels[i, j - 1].Location.X + labels[i, j - 1].Width  - 3: 0, height);
+                    labels[i, j] = new OOPLabel() { Visible = true, Width = labelWidth, Height = labelHeight, BackColor = initialLabelColor };
+                    labels[i, j].Location = new Point(j > 0 ? labels[i, j - 1].Location.X + labels[i, j - 1].Width: 0, height);
                     labels[i, j].MouseMove += Events.labelMouseMove;
-                    labels[i, j].Name = i + " " + j + " " + labelCost;
+                    labels[i, j].Name = i + " " + j;
+                    labels[i, j].Weight = labels[i, j].UnweightValue;
                     labels[i, j].MouseLeave += Events.labelMouseLeave;
                     labels[i, j].MouseDown += Events.labelMouseDown;
+                    labels[i, j].Paint += Events.PaintGrid;
+                    labels[i, j].Unpaint += Events.DeleteGrid;
                     form.Controls.Add(labels[i, j]);
                 }
             }
