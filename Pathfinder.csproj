@@ -95,6 +95,7 @@
     <Content Include="Images\sourcePath.png" />
     <Content Include="Images\source.png" />
     <Content Include="Images\sourceSearches.png" />
+    <Content Include="Images\weightedCursor.cur" />
     <Content Include="Images\weightInitial.png" />
     <Content Include="Images\weightSearched.png" />
     <Content Include="Images\weightSearchedBorder.png" />

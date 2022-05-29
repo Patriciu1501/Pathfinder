@@ -17,7 +17,7 @@
 
             form = new Form();
             menu = new Menu();
-            form.Controls.Add(menu.topBar);
+            form.Controls.Add(Menu.topBar);
             DialogResult gridResult = MessageBox.Show("Turn grid on?", "Grid activator", MessageBoxButtons.YesNo);
             if (gridResult == DialogResult.Yes) Map.gridOn = true;
             

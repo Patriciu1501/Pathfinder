@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using Pathfinder.Algorithms;
 using System.Threading;
+using System.IO;
 
 namespace Pathfinder {
     public static class Events {
@@ -10,7 +11,7 @@ namespace Pathfinder {
 
         private static bool destinationDragging = false;
 
-        static public void labelMouseMove(object sender, MouseEventArgs e) {
+        public static void labelMouseMove(object sender, MouseEventArgs e) {
 
             OOPLabel curr = sender as OOPLabel;
 
@@ -48,7 +49,7 @@ namespace Pathfinder {
         }
 
 
-        static public void labelMouseLeave(object sender, EventArgs e) {
+        public static void labelMouseLeave(object sender, EventArgs e) {
 
             OOPLabel curr = sender as OOPLabel;
 
@@ -56,12 +57,29 @@ namespace Pathfinder {
         }
 
 
-        static public void labelMouseDown(object sender, EventArgs e) {
+        public static void labelMouseDown(object sender, EventArgs e) {
 
             MouseEventArgs pressedButton = e as MouseEventArgs;
             OOPLabel curr = sender as OOPLabel;
 
-            if (Map.sourceFlagAdded == false && curr.BackColor != Map.obstacleColor) {
+            if(curr.Cursor != Cursors.Default && curr != Map.source && curr != Map.destination && curr.BackColor != Map.obstacleColor) {
+
+                curr.Weight = curr.WeightValue;
+                curr.Image = Map.weightInitialImage;
+                Map.weightedNodes++;
+
+                if (!Map.weightedGraph) {
+
+                    Map.weightedGraph = true;
+                    Menu.BFSButton.ForeColor = Color.Red;
+                    Menu.DFSButton.ForeColor = Color.Red;
+
+                }
+
+                foreach (var i in Map.labels) i.Cursor = Cursors.Default;
+            }
+
+            else if (Map.sourceFlagAdded == false && curr.BackColor != Map.obstacleColor) {
 
                 curr.BackColor = Map.initialLabelColor;
                 curr.Image = Map.sourceImage;
@@ -91,7 +109,7 @@ namespace Pathfinder {
         }
 
 
-        static public void resetClick(object sender, EventArgs e) {
+        public static void resetClick(object sender, EventArgs e) {
 
             
             if(Algorithm.runningAlgorithm.Count > 0)
@@ -112,6 +130,10 @@ namespace Pathfinder {
                     Map.labels[i, j].Image = null;
                 }
 
+            Map.weightedGraph = false;
+            Map.weightedNodes = 0;
+            Menu.BFSButton.ForeColor = Color.FromArgb(0, 207, 255);
+            Menu.DFSButton.ForeColor = Color.FromArgb(0, 207, 255);
             Map.source = null;
             Map.destination = null;
             Map.sourceFlagAdded = false;
@@ -125,54 +147,63 @@ namespace Pathfinder {
 
 
 
-        static public void exitClick(object sender, EventArgs e) {
+        public static void exitClick(object sender, EventArgs e) {
 
             DialogResult answ = MessageBox.Show("Are you sure?", "Exit program", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (answ == DialogResult.Yes) {
 
-                if(Algorithm.runningAlgorithm.Count != 0) Algorithm.runningAlgorithm[0].Abort();
+                if(Algorithm.runningAlgorithm.Count != 0) {
+
+                    if (Algorithm.runningAlgorithm[0].ThreadState == ThreadState.Suspended) Algorithm.runningAlgorithm[0].Resume();
+
+                    Algorithm.runningAlgorithm[0].Abort();
+                }
+
                 Tutorial.runningNotifier.Abort();
                 Application.ExitThread();            
             }
         }
 
-        static public void formClose(object sender, FormClosingEventArgs e) => exitClick(sender, e); 
-
-        static public void mouseEnterMenuButton(object sender, EventArgs e) {
-
-            if ((sender as Button).Text.Length <= 6) {
-
-                (sender as Button).Cursor = Cursors.Hand;
-                (sender as Button).BackColor = Color.DarkGray;
-            }
+        public static void formClose(object sender, FormClosingEventArgs e) => exitClick(sender, e); 
+        
+        public static void mouseEnterMenuButton(object sender, EventArgs e) {
+            
+            (sender as Button).Cursor = Cursors.Hand;
+            (sender as Button).BackColor = Color.DarkGray;
+  
         }
 
 
-        static public void mouseLeaveMenuButton(object sender, EventArgs e) {
+        public static void mouseLeaveMenuButton(object sender, EventArgs e) {
 
             (sender as Button).BackColor = Color.Black;
         }
 
-        static public void BFSClick(object sender, EventArgs e) {
+        public static void BFSClick(object sender, EventArgs e) {
 
-            Algorithm startBFS = new BFS();
+            if (Menu.BFSButton.ForeColor != Color.Red) {
 
-            startBFS.RunningAlgorithm.Add(new Thread(startBFS.StartAlgorithm));
-            startBFS.RunningAlgorithm[startBFS.RunningAlgorithm.Count - 1].Start();
+                Algorithm startBFS = new BFS();
 
-        }
-
-
-        static public void DFSClick(object sender, EventArgs e) {
-
-            Algorithm startDFS = new DFS();
-
-            startDFS.RunningAlgorithm.Add(new Thread(startDFS.StartAlgorithm));
-            startDFS.RunningAlgorithm[startDFS.RunningAlgorithm.Count - 1].Start();
+                startBFS.RunningAlgorithm.Add(new Thread(startBFS.StartAlgorithm));
+                startBFS.RunningAlgorithm[startBFS.RunningAlgorithm.Count - 1].Start();
+            }
 
         }
 
-        static public void MazeClick(object sender, EventArgs e) {
+
+        public static void DFSClick(object sender, EventArgs e) {
+
+            if (Menu.DFSButton.ForeColor != Color.Red) {
+
+                Algorithm startDFS = new DFS();
+
+                startDFS.RunningAlgorithm.Add(new Thread(startDFS.StartAlgorithm));
+                startDFS.RunningAlgorithm[startDFS.RunningAlgorithm.Count - 1].Start();
+            }
+        }
+
+        public static void MazeClick(object sender, EventArgs e) {
 
             Algorithm startMazeBacktracker = new MazeBacktracker();
 
@@ -182,7 +213,7 @@ namespace Pathfinder {
         }
 
 
-        static public void speedUpClick(object sender, EventArgs e) {
+        public static void speedUpClick(object sender, EventArgs e) {
 
             if (Algorithm.algorithmSpeed == Algorithm.AlgorithmSpeed.Paused) {
                 
@@ -197,7 +228,7 @@ namespace Pathfinder {
         }
 
 
-        static public void speedDownClick(object sender, EventArgs e) {
+        public static void speedDownClick(object sender, EventArgs e) {
 
             if (Algorithm.algorithmSpeed == Algorithm.AlgorithmSpeed.VerySlow && Algorithm.runningAlgorithm.Count > 0) {
 
@@ -210,9 +241,17 @@ namespace Pathfinder {
         }
 
 
-        static public void PaintGrid(object sender, PaintEventArgs e) {
+        public static void PaintGrid(object sender, PaintEventArgs e) {
 
             ControlPaint.DrawBorder(e.Graphics, (sender as OOPLabel).DisplayRectangle, Color.Black, ButtonBorderStyle.Outset);
+        }
+
+
+        public static void weightButtonClick(object sender, EventArgs e) {
+
+
+            foreach (var i in Map.labels) i.Cursor = Map.weightedCursor;
+                 
         }
         
     }

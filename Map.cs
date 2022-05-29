@@ -12,7 +12,7 @@ namespace Pathfinder {
         private const byte labelsRowNumber = 25;
         private const byte labelsColumnNumber = 31;
 
-        private static readonly int labelHeight = (Window.height - Menu.GetTopBarHeight()) / labelsRowNumber;
+        private static readonly int labelHeight = (Window.height - Menu.topBar.Height) / labelsRowNumber;
         private static readonly int labelWidth = Window.width / labelsColumnNumber + 1; 
 
         public static readonly Color initialLabelColor;
@@ -26,13 +26,19 @@ namespace Pathfinder {
         public static readonly Image sourcePath;
         public static readonly Image destinationImage;
         public static readonly Image destinationReachedImage;
-
+        public static readonly Image weightInitialImage;
+        public static readonly Image weightSearchedImage;
+        public static readonly Image weightSearchedBorderImage;
         public static OOPLabel[,] labels;
         public static OOPLabel source, destination;
         public static bool sourceFlagAdded;
         public static bool destinationFlagAdded;
 
         public static bool gridOn;
+        public static bool weightedGraph;
+        public static int weightedNodes;
+
+        public static Cursor weightedCursor;
 
 
         static Map() { 
@@ -48,6 +54,10 @@ namespace Pathfinder {
             sourcePath = Image.FromFile(fullPath + "sourcePath.png");
             destinationImage = Image.FromFile(fullPath + "destination.png");
             destinationReachedImage = Image.FromFile(fullPath + "destinationReached.png");
+            weightInitialImage = Image.FromFile(fullPath + "weightInitial.png");
+            weightSearchedImage = Image.FromFile(fullPath + "weightSearched.png");
+            weightSearchedBorderImage = Image.FromFile(fullPath + "weightSearchedBorder.png");
+
 
             initialLabelColor = Color.FromArgb(179, 239, 255);
             obstacleColor = Color.FromArgb(40, 50, 90);
@@ -55,13 +65,17 @@ namespace Pathfinder {
             searchColorBorder = Color.FromArgb(128, 196, 255);
             pathColor = Color.FromArgb(248, 255, 78);
 
+
+            weightedCursor = new Cursor(fullPath + "weightedCursor.cur");
+          
+
         }
 
 
         public Map(Form form) {
     
             labels = new OOPLabel[labelsRowNumber, labelsColumnNumber];
-            int height = Menu.GetTopBarHeight();
+            int height = Menu.topBar.Height;
      
             for (int i = 0; i < labels.GetLength(0); i++) {
 

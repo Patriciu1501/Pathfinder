@@ -13,27 +13,29 @@ namespace Pathfinder {
         private readonly Size exitButtonSize = new Size(Window.width / 24, Window.height / 43);
         private readonly Size BFSButtonSize = new Size(Window.width / 24, Window.height / 43);
         private readonly Size DFSButtonSize = new Size(Window.width / 24, Window.height / 43);
-        private readonly Size DijkstraButtonSize = new Size(Window.width / 22, Window.height / 43);
+        private readonly Size DijkstraButtonSize = new Size(Window.width / 16, Window.height / 43);
         private readonly Size AStarButtonSize = new Size(Window.width / 24, Window.height / 43);
+        private readonly Size weightButtonSize = new Size(Window.width / 14, Window.height / 43);
         private readonly Size MazeButtonSize = new Size(Window.width / 24, Window.height / 43);
         private readonly Size speedLabelSize = new Size(Window.width / 28, Window.height / 43);
         private readonly Size speedUpButtonSize = new Size(Window.width / 64, Window.height / 43);
         private readonly Size speedDownButtonSize = new Size(Window.width / 64, Window.height / 43);
         private readonly Size topBarSize = new Size(Window.width, topBarHeight);
 
-        private Button resetButton;
-        private Button exitButton;
-        private Button BFSButton;
-        private Button DFSButton;
-        private Button DijkstraButton;
-        private Button AStarButton;
-        private Button MazeButton;
-        private Label speedLabel;
-        private Button speedUpButton;
-        private Button speedDownButton;
-        private Tutorial tutorial;
+        public static Button resetButton;
+        public static Button exitButton;
+        public static Button BFSButton;
+        public static Button DFSButton;
+        public static Button DijkstraButton;
+        public static Button AStarButton;
+        public static Button weightButton;
+        public static Button MazeButton;
+        public static Label speedLabel;
+        public static Button speedUpButton;
+        public static Button speedDownButton;
+        public static Tutorial tutorial;
 
-        public Label topBar;
+        public static Label topBar;
         public static Label countObstaclesLabel;
         public static Label exploredNodesLabel;
 
@@ -52,6 +54,7 @@ namespace Pathfinder {
             speedDownButton = new Button() { Visible = true };
             countObstaclesLabel = new Label() { Visible = true };
             exploredNodesLabel = new Label() { Visible = true };
+            weightButton = new Button() { Visible = true };
             tutorial = new Tutorial();
 
             resetButton.FlatStyle = FlatStyle.Flat;
@@ -105,7 +108,7 @@ namespace Pathfinder {
             DijkstraButton.FlatStyle = FlatStyle.Flat;
             DijkstraButton.FlatAppearance.BorderSize = 0;
             //DijkstraButton.Click += Events.DFSClick;
-            DijkstraButton.Text = "&Dijk";
+            DijkstraButton.Text = "&Dijkstra";
             DijkstraButton.Location = new Point(DFSButton.Location.X + DFSButton.Width, 0);
             DijkstraButton.ForeColor = Color.FromArgb(0, 207, 255);
             DijkstraButton.BackColor = Color.Black;
@@ -141,6 +144,19 @@ namespace Pathfinder {
             MazeButton.MouseLeave += Events.mouseLeaveMenuButton;
 
 
+            weightButton.FlatStyle = FlatStyle.Flat;
+            weightButton.FlatAppearance.BorderSize = 0;
+            weightButton.Text = "&Add weight";
+            weightButton.Location = new Point(MazeButton.Location.X + MazeButton.Width, 0);
+            weightButton.ForeColor = Color.FromArgb(0, 207, 255);
+            weightButton.BackColor = Color.Black;
+            weightButton.Font = menuButtonFont;
+            weightButton.Size = weightButtonSize;
+            weightButton.MouseEnter += Events.mouseEnterMenuButton;
+            weightButton.MouseLeave += Events.mouseLeaveMenuButton;
+            weightButton.Click += Events.weightButtonClick;
+
+
             countObstaclesLabel.FlatStyle = FlatStyle.Flat;
             countObstaclesLabel.Text = "Obstacles: 0";
             countObstaclesLabel.Location = new Point(exitButton.Location.X - exitButton.Width - 70, 0);
@@ -150,9 +166,7 @@ namespace Pathfinder {
             countObstaclesLabel.Size = new Size(Window.width / 10, Window.height / 43);
 
 
-          
-
-
+         
             exploredNodesLabel.FlatStyle = FlatStyle.Flat;
             exploredNodesLabel.Text = "Explored: 0";
             exploredNodesLabel.Location = new Point(countObstaclesLabel.Location.X - countObstaclesLabel.Width + 20, 0);
@@ -206,6 +220,7 @@ namespace Pathfinder {
             topBar.Controls.Add(DFSButton);
             topBar.Controls.Add(DijkstraButton);
             topBar.Controls.Add(AStarButton);
+            topBar.Controls.Add(weightButton);
             topBar.Controls.Add(speedLabel);
             topBar.Controls.Add(MazeButton);
             topBar.Controls.Add(speedUpButton);
@@ -216,7 +231,6 @@ namespace Pathfinder {
             Tutorial.runningNotifier = new System.Threading.Thread(tutorial.runNotifier);
         }
 
-        public static int GetTopBarHeight() => topBarHeight;
 
         public static void ModifyCountObstacles(bool increment) {
 
