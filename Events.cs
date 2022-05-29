@@ -93,17 +93,17 @@ namespace Pathfinder {
 
         static public void resetClick(object sender, EventArgs e) {
 
-            if (Algorithm.algorithmState == Algorithm.AlgorithmState.Running) {
+            
+            if(Algorithm.runningAlgorithm.Count > 0)
+                for (int i = 0; i < Algorithm.runningAlgorithm.Count; i++) {
 
-                
-                if (Algorithm.algorithmSpeed == Algorithm.AlgorithmSpeed.Paused) {
+                    if (Algorithm.runningAlgorithm[i].ThreadState == ThreadState.Suspended) // you must resume a suspended thread before abort
+                        Algorithm.runningAlgorithm[i].Resume();
 
-                    Algorithm.runningAlgorithm[Algorithm.runningAlgorithm.Count - 1].Resume();
-                    Algorithm.algorithmSpeed = Algorithm.AlgorithmSpeed.Standard;
-                }
-
-                for (int i = 0; i < Algorithm.runningAlgorithm.Count; i++) Algorithm.runningAlgorithm[i].Abort();             
-            }
+                    Algorithm.runningAlgorithm[i].Abort();
+                    Algorithm.runningAlgorithm.RemoveAt(i);
+                }            
+            
 
             for (int i = 0; i < Map.labels.GetLength(0); i++)
                 for (int j = 0; j < Map.labels.GetLength(1); j++) {
@@ -112,7 +112,6 @@ namespace Pathfinder {
                     Map.labels[i, j].Image = null;
                 }
 
-
             Map.source = null;
             Map.destination = null;
             Map.sourceFlagAdded = false;
@@ -120,6 +119,8 @@ namespace Pathfinder {
             Menu.ResetCountObstacles();
             Menu.ResetExploredNodes();
             Algorithm.algorithmState = Algorithm.AlgorithmState.NeverFinished;
+            Algorithm.algorithmName = Algorithm.AlgorithmName.None;
+            Algorithm.algorithmSpeed = Algorithm.AlgorithmSpeed.Standard;
         }
 
 
@@ -186,6 +187,7 @@ namespace Pathfinder {
             if (Algorithm.algorithmSpeed == Algorithm.AlgorithmSpeed.Paused) {
                 
                 Algorithm.algorithmSpeed = Algorithm.AlgorithmSpeed.VerySlow;
+                if(Algorithm.runningAlgorithm[Algorithm.runningAlgorithm.Count - 1].ThreadState == ThreadState.Suspended)
                 Algorithm.runningAlgorithm[Algorithm.runningAlgorithm.Count - 1].Resume();
             }
 
@@ -203,7 +205,7 @@ namespace Pathfinder {
                 Algorithm.runningAlgorithm[Algorithm.runningAlgorithm.Count - 1].Suspend();
             }
 
-            else if (Algorithm.algorithmSpeed <= Algorithm.AlgorithmSpeed.Paused) Algorithm.algorithmSpeed += 20;
+            else if (Algorithm.algorithmSpeed < Algorithm.AlgorithmSpeed.Paused) Algorithm.algorithmSpeed += 20;
             Tutorial.speedModified = true;
         }
 
@@ -213,11 +215,5 @@ namespace Pathfinder {
             ControlPaint.DrawBorder(e.Graphics, (sender as OOPLabel).DisplayRectangle, Color.Black, ButtonBorderStyle.Outset);
         }
         
-
-        static public void DeleteGrid(object sender, PaintEventArgs e) {
-
-            ControlPaint.DrawBorder(e.Graphics, (sender as OOPLabel).DisplayRectangle, Color.DarkGray, ButtonBorderStyle.None);
-        }
-
     }
 }

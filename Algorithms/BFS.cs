@@ -39,7 +39,6 @@ namespace Pathfinder.Algorithms {
                         if ((adjancecyList[toVisit.Peek()] as List<Label>)[i] == Map.destination) {
 
                             destinationFound = true;
-                            Tutorial.destinationFound = true;
                             Map.destination.Image = Map.destinationReachedImage;
                             Map.destination.BackColor = Map.searchColorBorder;
                             break;

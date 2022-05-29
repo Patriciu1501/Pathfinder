@@ -37,7 +37,6 @@ namespace Pathfinder.Algorithms {
                 Map.destination.Image = Map.destinationReachedImage;
                 destinationFound = true;
                 stopFunciton = true;
-                Tutorial.destinationFound = true;
                 return;
             }
 
@@ -46,12 +45,7 @@ namespace Pathfinder.Algorithms {
             Thread.Sleep((int)algorithmSpeed);
             sursa.BackColor = Map.searchColor;
 
-            #region Explored Nodes
-            string[] splits = Menu.exploredNodesLabel.Text.Split(' ');
-            int nr = Convert.ToInt32(splits[1]);
-            nr++;
-            Menu.exploredNodesLabel.Text = splits[0] + " " + nr;
-            #endregion
+            Menu.ModifyExploredNodes();
 
             foreach (var i in adjancecyList[sursa] as List<Label>) 
                 if (!path.Contains(i) && stopFunciton == false) Helper(i, sursa, ref stopFunciton);

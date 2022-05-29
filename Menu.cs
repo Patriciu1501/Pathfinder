@@ -6,13 +6,27 @@ using System.Windows.Forms;
 namespace Pathfinder {
     class Menu {
 
-        private readonly Font menuButtonFont = new Font("Nirmala UI", 11, FontStyle.Bold);
         private static readonly int topBarHeight = Window.height / 36;
+
+        private readonly Font menuButtonFont = new Font("Nirmala UI", 11, FontStyle.Bold);
+        private readonly Size resetButtonSize = new Size(Window.width / 24, Window.height / 43);
+        private readonly Size exitButtonSize = new Size(Window.width / 24, Window.height / 43);
+        private readonly Size BFSButtonSize = new Size(Window.width / 24, Window.height / 43);
+        private readonly Size DFSButtonSize = new Size(Window.width / 24, Window.height / 43);
+        private readonly Size DijkstraButtonSize = new Size(Window.width / 22, Window.height / 43);
+        private readonly Size AStarButtonSize = new Size(Window.width / 24, Window.height / 43);
+        private readonly Size MazeButtonSize = new Size(Window.width / 24, Window.height / 43);
+        private readonly Size speedLabelSize = new Size(Window.width / 28, Window.height / 43);
+        private readonly Size speedUpButtonSize = new Size(Window.width / 64, Window.height / 43);
+        private readonly Size speedDownButtonSize = new Size(Window.width / 64, Window.height / 43);
+        private readonly Size topBarSize = new Size(Window.width, topBarHeight);
 
         private Button resetButton;
         private Button exitButton;
         private Button BFSButton;
         private Button DFSButton;
+        private Button DijkstraButton;
+        private Button AStarButton;
         private Button MazeButton;
         private Label speedLabel;
         private Button speedUpButton;
@@ -25,11 +39,13 @@ namespace Pathfinder {
 
         public Menu() {
 
-            topBar = new Label() { Visible = true, BackColor = Color.Black, Size = new Size(Window.width, topBarHeight)};
+            topBar = new Label() { Visible = true, BackColor = Color.Black, Size = topBarSize};
             resetButton = new Button() { Visible = true };
             exitButton = new Button() { Visible = true };
             BFSButton = new Button() { Visible = true };
             DFSButton = new Button() { Visible = true };
+            DijkstraButton = new Button() { Visible = true };
+            AStarButton = new Button() { Visible = true };
             MazeButton = new Button() { Visible = true };
             speedLabel = new Label() { Visible = true };
             speedUpButton = new Button() { Visible = true };
@@ -45,7 +61,7 @@ namespace Pathfinder {
             resetButton.ForeColor = Color.FromArgb(0, 207, 255);
             resetButton.BackColor = Color.Black;
             resetButton.Font = menuButtonFont;
-            resetButton.Size = new Size(Window.width / 24, Window.height / 43);
+            resetButton.Size = resetButtonSize;
             resetButton.MouseEnter += Events.mouseEnterMenuButton;
             resetButton.MouseLeave += Events.mouseLeaveMenuButton;
 
@@ -53,7 +69,7 @@ namespace Pathfinder {
             exitButton.FlatAppearance.BorderSize = 0;
             exitButton.Click += Events.exitClick;
             exitButton.Text = "&Exit";
-            exitButton.Size = new Size(Window.width / 24, Window.height / 43);
+            exitButton.Size = exitButtonSize;
             exitButton.Location = new Point(topBar.Width - exitButton.Width);
             exitButton.ForeColor = Color.FromArgb(0, 207, 255);
             exitButton.BackColor = Color.Black;
@@ -69,7 +85,7 @@ namespace Pathfinder {
             BFSButton.ForeColor = Color.FromArgb(0, 207, 255);
             BFSButton.BackColor = Color.Black;
             BFSButton.Font = menuButtonFont;
-            BFSButton.Size = new Size(Window.width / 24, Window.height / 43);
+            BFSButton.Size = BFSButtonSize;
             BFSButton.MouseEnter += Events.mouseEnterMenuButton;
             BFSButton.MouseLeave += Events.mouseLeaveMenuButton;
 
@@ -77,54 +93,92 @@ namespace Pathfinder {
             DFSButton.FlatAppearance.BorderSize = 0;
             DFSButton.Click += Events.DFSClick;
             DFSButton.Text = "&DFS";
-            DFSButton.Location = new Point(resetButton.Width + 250, 0);
+            DFSButton.Location = new Point(BFSButton.Location.X + BFSButton.Width, 0);
             DFSButton.ForeColor = Color.FromArgb(0, 207, 255);
             DFSButton.BackColor = Color.Black;
             DFSButton.Font = menuButtonFont;
-            DFSButton.Size = new Size(Window.width / 24, Window.height / 43);
+            DFSButton.Size = DFSButtonSize;
             DFSButton.MouseEnter += Events.mouseEnterMenuButton;
             DFSButton.MouseLeave += Events.mouseLeaveMenuButton;
+
+
+            DijkstraButton.FlatStyle = FlatStyle.Flat;
+            DijkstraButton.FlatAppearance.BorderSize = 0;
+            //DijkstraButton.Click += Events.DFSClick;
+            DijkstraButton.Text = "&Dijk";
+            DijkstraButton.Location = new Point(DFSButton.Location.X + DFSButton.Width, 0);
+            DijkstraButton.ForeColor = Color.FromArgb(0, 207, 255);
+            DijkstraButton.BackColor = Color.Black;
+            DijkstraButton.Font = menuButtonFont;
+            DijkstraButton.Size = DijkstraButtonSize;
+            DijkstraButton.MouseEnter += Events.mouseEnterMenuButton;
+            DijkstraButton.MouseLeave += Events.mouseLeaveMenuButton;
+
+
+            AStarButton.FlatStyle = FlatStyle.Flat;
+            AStarButton.FlatAppearance.BorderSize = 0;
+            //DijkstraButton.Click += Events.DFSClick;
+            AStarButton.Text = "&A*";
+            AStarButton.Location = new Point(DijkstraButton.Location.X + DijkstraButton.Width, 0);
+            AStarButton.ForeColor = Color.FromArgb(0, 207, 255);
+            AStarButton.BackColor = Color.Black;
+            AStarButton.Font = menuButtonFont;
+            AStarButton.Size = AStarButtonSize;
+            AStarButton.MouseEnter += Events.mouseEnterMenuButton;
+            AStarButton.MouseLeave += Events.mouseLeaveMenuButton;
 
 
             MazeButton.FlatStyle = FlatStyle.Flat;
             MazeButton.FlatAppearance.BorderSize = 0;
             MazeButton.Click += Events.MazeClick;
             MazeButton.Text = "&Maze";
-            MazeButton.Location = new Point(resetButton.Width + 350, 0);
+            MazeButton.Location = new Point(AStarButton.Location.X + AStarButton.Width, 0);
             MazeButton.ForeColor = Color.FromArgb(0, 207, 255);
             MazeButton.BackColor = Color.Black;
             MazeButton.Font = menuButtonFont;
-            MazeButton.Size = new Size(Window.width / 24, Window.height / 43);
+            MazeButton.Size = MazeButtonSize;
             MazeButton.MouseEnter += Events.mouseEnterMenuButton;
             MazeButton.MouseLeave += Events.mouseLeaveMenuButton;
 
 
             countObstaclesLabel.FlatStyle = FlatStyle.Flat;
             countObstaclesLabel.Text = "Obstacles: 0";
-            countObstaclesLabel.Location = new Point(resetButton.Width + 1300, 0);
+            countObstaclesLabel.Location = new Point(exitButton.Location.X - exitButton.Width - 70, 0);
             countObstaclesLabel.ForeColor = Color.FromArgb(0, 207, 255);
             countObstaclesLabel.BackColor = Color.Black;
             countObstaclesLabel.Font = menuButtonFont;
             countObstaclesLabel.Size = new Size(Window.width / 10, Window.height / 43);
 
 
+          
+
+
+            exploredNodesLabel.FlatStyle = FlatStyle.Flat;
+            exploredNodesLabel.Text = "Explored: 0";
+            exploredNodesLabel.Location = new Point(countObstaclesLabel.Location.X - countObstaclesLabel.Width + 20, 0);
+            exploredNodesLabel.ForeColor = Color.FromArgb(0, 207, 255);
+            exploredNodesLabel.BackColor = Color.Black;
+            exploredNodesLabel.Font = menuButtonFont;
+            exploredNodesLabel.Size = new Size(Window.width / 16, Window.height / 43);
+
+
             speedLabel.FlatStyle = FlatStyle.Flat;
             speedLabel.Text = "&Speed";
-            speedLabel.Location = new Point(resetButton.Width + 1000, 0);
+            speedLabel.Location = new Point(exploredNodesLabel.Location.X - exploredNodesLabel.Width - 40, 0);
             speedLabel.ForeColor = Color.FromArgb(0, 207, 255);
             speedLabel.BackColor = Color.Black;
             speedLabel.Font = menuButtonFont;
-            speedLabel.Size = new Size(Window.width / 31, Window.height / 43);
+            speedLabel.Size = speedLabelSize;
 
             speedUpButton.FlatStyle = FlatStyle.Flat;
             speedUpButton.FlatAppearance.BorderSize = 0;
             speedUpButton.Click += Events.speedUpClick;
             speedUpButton.Text = "&+";
-            speedUpButton.Location = new Point(speedLabel.Location.X + speedLabel.Width);
+            speedUpButton.Location = new Point(speedLabel.Location.X + speedLabel.Width - 2);
             speedUpButton.ForeColor = Color.FromArgb(0, 207, 255);
             speedUpButton.BackColor = Color.Black;
             speedUpButton.Font = menuButtonFont;
-            speedUpButton.Size = new Size(Window.width / 64, Window.height / 43);
+            speedUpButton.Size = speedUpButtonSize;
             speedUpButton.MouseEnter += Events.mouseEnterMenuButton;
             speedUpButton.MouseLeave += Events.mouseLeaveMenuButton;
 
@@ -133,25 +187,15 @@ namespace Pathfinder {
             speedDownButton.FlatAppearance.BorderSize = 0;
             speedDownButton.Click += Events.speedDownClick;
             speedDownButton.Text = "&-";
-            speedDownButton.Size = new Size(Window.width / 64, Window.height / 43);
-            speedDownButton.Location = new Point(speedLabel.Location.X - speedDownButton.Width - 2);
+            speedDownButton.Size = speedDownButtonSize;
+            speedDownButton.Location = new Point(speedLabel.Location.X - speedDownButton.Width - 8, 0);
             speedDownButton.ForeColor = Color.FromArgb(0, 207, 255);
             speedDownButton.BackColor = Color.Black;
-            speedDownButton.Font = menuButtonFont;  
+            speedDownButton.Font = menuButtonFont;
             speedDownButton.MouseEnter += Events.mouseEnterMenuButton;
             speedDownButton.MouseLeave += Events.mouseLeaveMenuButton;
 
-
-            exploredNodesLabel.FlatStyle = FlatStyle.Flat;
-            exploredNodesLabel.Text = "Explored: 0";
-            exploredNodesLabel.Location = new Point(resetButton.Width + 1150, 0);
-            exploredNodesLabel.ForeColor = Color.FromArgb(0, 207, 255);
-            exploredNodesLabel.BackColor = Color.Black;
-            exploredNodesLabel.Font = menuButtonFont;
-            exploredNodesLabel.Size = new Size(Window.width / 16, Window.height / 43);
-
-            
-
+            Tutorial.tutorialEventNotifier.Location = new Point(speedDownButton.Location.X - (speedLabel.Width * 7), 0);
 
 
             topBar.Controls.Add(exitButton);
@@ -160,14 +204,14 @@ namespace Pathfinder {
             topBar.Controls.Add(exploredNodesLabel);
             topBar.Controls.Add(BFSButton);
             topBar.Controls.Add(DFSButton);
+            topBar.Controls.Add(DijkstraButton);
+            topBar.Controls.Add(AStarButton);
             topBar.Controls.Add(speedLabel);
             topBar.Controls.Add(MazeButton);
             topBar.Controls.Add(speedUpButton);
             topBar.Controls.Add(speedDownButton);
+            topBar.Controls.Add(Tutorial.tutorialEventNotifier);
 
-
-            tutorial.tutorialEventNotifier.Location = new Point(Window.width / 3, 0);
-            topBar.Controls.Add(tutorial.tutorialEventNotifier);
 
             Tutorial.runningNotifier = new System.Threading.Thread(tutorial.runNotifier);
         }

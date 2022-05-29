@@ -13,8 +13,29 @@ namespace Pathfinder.Algorithms {
 
         public override void StartAlgorithm() {
 
-            Events.resetClick(new object(), new EventArgs());
+            if (runningAlgorithm.Count > 0)
+                for (int i = 0; i < runningAlgorithm.Count - 1; i++) {
 
+                    if (runningAlgorithm[i].ThreadState == ThreadState.Suspended) // you must resume a suspended thread before abort
+                        runningAlgorithm[i].Resume();
+
+                    runningAlgorithm[i].Abort();
+                    runningAlgorithm.RemoveAt(i);
+                }
+
+
+            for (int i = 0; i < Map.labels.GetLength(0); i++)
+                for (int j = 0; j < Map.labels.GetLength(1); j++) {
+
+                    Map.labels[i, j].BackColor = Map.initialLabelColor;
+                    Map.labels[i, j].Image = null;
+                }
+
+
+            Map.destination = null;
+            Map.destinationFlagAdded = false;
+            Map.source = null;
+            Map.sourceFlagAdded = false;
             algorithmName = AlgorithmName.Maze;
             algorithmState = AlgorithmState.Running;
             Tutorial.algorithmLaunched = true;
@@ -55,7 +76,7 @@ namespace Pathfinder.Algorithms {
             }
 
 
-            algorithmState = AlgorithmState.Finished;
+            algorithmState = AlgorithmState.NeverFinished;
             Thread.Sleep(500);
         }
 

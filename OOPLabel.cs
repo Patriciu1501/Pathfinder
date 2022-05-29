@@ -8,7 +8,6 @@ namespace Pathfinder {
         public readonly byte UnweightValue = 1;
 
         public byte Weight { get; set; }
-
-        public event PaintEventHandler Unpaint;
     }
 }
+

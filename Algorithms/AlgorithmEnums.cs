@@ -23,6 +23,7 @@ namespace Pathfinder.Algorithms {
 
         public enum AlgorithmName {
 
+            None,
             BFS,
             DFS,
             Dijkstra,

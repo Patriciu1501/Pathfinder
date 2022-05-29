@@ -27,11 +27,12 @@ namespace Pathfinder {
         public static readonly Image destinationImage;
         public static readonly Image destinationReachedImage;
 
-        
         public static OOPLabel[,] labels;
         public static OOPLabel source, destination;
         public static bool sourceFlagAdded;
         public static bool destinationFlagAdded;
+
+        public static bool gridOn;
 
 
         static Map() { 
@@ -75,8 +76,7 @@ namespace Pathfinder {
                     labels[i, j].Weight = labels[i, j].UnweightValue;
                     labels[i, j].MouseLeave += Events.labelMouseLeave;
                     labels[i, j].MouseDown += Events.labelMouseDown;
-                    labels[i, j].Paint += Events.PaintGrid;
-                    labels[i, j].Unpaint += Events.DeleteGrid;
+                    if(gridOn) labels[i, j].Paint += Events.PaintGrid;
                     form.Controls.Add(labels[i, j]);
                 }
             }
