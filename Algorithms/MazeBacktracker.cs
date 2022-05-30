@@ -81,7 +81,7 @@ namespace Pathfinder.Algorithms {
             }
 
 
-            algorithmState = AlgorithmState.Finished;
+            algorithmState = AlgorithmState.NeverFinished; // pun aici neverFinished ca notificatorul sa nu atraga atentia
             Thread.Sleep(500);
         }
 
