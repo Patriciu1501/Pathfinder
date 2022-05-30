@@ -8,7 +8,7 @@ using System.Threading;
 using System.Windows.Forms;
 
 namespace Pathfinder {
-    class Tutorial {
+    static class Tutorial {
 
         const int notificationDelay = 500;
 
@@ -19,7 +19,7 @@ namespace Pathfinder {
         public static bool algorithmLaunched;
 
 
-        public Tutorial() {
+        static Tutorial() {
 
             tutorialStartLabel = new Form() { Size = new Size(500, 500), FormBorderStyle = FormBorderStyle.None };
             tutorialEventNotifier = new OOPLabel() { Visible = false, Size = new Size(Window.width / 5, Window.height / 27) };
@@ -31,88 +31,94 @@ namespace Pathfinder {
             algorithmLaunched = false;
         }
 
-        public void runNotifier() {
+        public static void runNotifier() {
 
             while (true) {
 
                 int nowTime = DateTime.Now.Second;
 
+                try {
 
-                while (Map.sourceFlagAdded == false) {
+                    while (Map.sourceFlagAdded == false) {
 
-                    if (tutorialEventNotifier.Visible == false) {
+                        if (tutorialEventNotifier.Visible == false) {
 
-                        tutorialEventNotifier.Visible = true;
-                        tutorialEventNotifier.Text = "Place the source node";
+                            tutorialEventNotifier.Visible = true;
+                            tutorialEventNotifier.Text = "Place the source node";
+                        }
+
+                        Thread.Sleep(notificationDelay);
+                        tutorialEventNotifier.Visible = false;
+                        Thread.Sleep(notificationDelay);
+
                     }
 
-                    Thread.Sleep(notificationDelay);
-                    tutorialEventNotifier.Visible = false;
-                    Thread.Sleep(notificationDelay);
+                    while (Map.sourceFlagAdded && !Map.destinationFlagAdded) {
 
-                }
+                        if (tutorialEventNotifier.Visible == false) {
 
-                while (Map.sourceFlagAdded && !Map.destinationFlagAdded) {
-
-                    if (tutorialEventNotifier.Visible == false) {
-
-                        tutorialEventNotifier.Visible = true;
-                        tutorialEventNotifier.Text = "Place the destination node";
-                    }
+                            tutorialEventNotifier.Visible = true;
+                            tutorialEventNotifier.Text = "Place the destination node";
+                        }
 
 
-                    Thread.Sleep(notificationDelay);
-                    tutorialEventNotifier.Visible = false;
-                    Thread.Sleep(notificationDelay);
+                        Thread.Sleep(notificationDelay);
+                        tutorialEventNotifier.Visible = false;
+                        Thread.Sleep(notificationDelay);
 
-                }
-
-
-                while(Algorithm.algorithmState == Algorithm.AlgorithmState.NeverFinished && Map.destinationFlagAdded) {
-
-                    if (tutorialEventNotifier.Visible == false) {
-
-                        tutorialEventNotifier.Visible = true;
-                        tutorialEventNotifier.Text = "Run any algorithm";
                     }
 
 
-                    Thread.Sleep(notificationDelay);
-                    tutorialEventNotifier.Visible = false;
-                    Thread.Sleep(notificationDelay);
-                }
+                    while (Algorithm.algorithmState == Algorithm.AlgorithmState.NeverFinished && Map.destinationFlagAdded) {
 
-  
-                while (Algorithm.algorithmState == Algorithm.AlgorithmState.Finished && !speedModified) {
+                        if (tutorialEventNotifier.Visible == false) {
 
-                    if (tutorialEventNotifier.Visible == false) {
+                            tutorialEventNotifier.Visible = true;
+                            tutorialEventNotifier.Text = "Run any algorithm";
+                        }
 
-                        if (!Algorithm.destinationFound) tutorialEventNotifier.Text = "Destination not found";
 
-                        else tutorialEventNotifier.Text = "Destination found";
+                        Thread.Sleep(notificationDelay);
+                        tutorialEventNotifier.Visible = false;
+                        Thread.Sleep(notificationDelay);
+                    }
 
+
+                    while (Algorithm.algorithmState == Algorithm.AlgorithmState.Finished && !speedModified) {
+
+                        if (tutorialEventNotifier.Visible == false) {
+
+                            if (!Algorithm.destinationFound) tutorialEventNotifier.Text = "Destination not found";
+
+                            else tutorialEventNotifier.Text = "Destination found";
+
+                            tutorialEventNotifier.Visible = true;
+                        }
+                    }
+
+
+                    while (speedModified == true) {
+
+                        tutorialEventNotifier.Text = "Speed set to " + Algorithm.algorithmSpeed.ToString();
                         tutorialEventNotifier.Visible = true;
+                        Thread.Sleep(notificationDelay);
+                        tutorialEventNotifier.Visible = false;
+                        speedModified = false;
+                    }
+
+
+                    while (algorithmLaunched == true) {
+
+                        tutorialEventNotifier.Text = Algorithm.algorithmName.ToString() + " launched";
+                        tutorialEventNotifier.Visible = true;
+                        Thread.Sleep(notificationDelay);
+                        tutorialEventNotifier.Visible = false;
+                        algorithmLaunched = false;
                     }
                 }
 
+                catch (InvalidOperationException e) {
 
-                while (speedModified == true) {
-
-                    tutorialEventNotifier.Text = "Speed set to " + Algorithm.algorithmSpeed.ToString();
-                    tutorialEventNotifier.Visible = true;
-                    Thread.Sleep(notificationDelay);
-                    tutorialEventNotifier.Visible = false;
-                    speedModified = false;
-                }
-
-
-                while (algorithmLaunched == true) {
-
-                    tutorialEventNotifier.Text = Algorithm.algorithmName.ToString() + " launched";
-                    tutorialEventNotifier.Visible = true;
-                    Thread.Sleep(notificationDelay);
-                    tutorialEventNotifier.Visible = false;
-                    algorithmLaunched = false;
                 }
             }
         }

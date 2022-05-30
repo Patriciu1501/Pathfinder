@@ -24,6 +24,7 @@ namespace Pathfinder {
 
                 if (Algorithm.algorithmName == Algorithm.AlgorithmName.BFS) BFSClick(sender, e);
                 else if (Algorithm.algorithmName == Algorithm.AlgorithmName.DFS) DFSClick(sender, e);
+                else if (Algorithm.algorithmName == Algorithm.AlgorithmName.Dijkstra) DijkstraClick(sender, e);
 
             }
 
@@ -64,9 +65,9 @@ namespace Pathfinder {
 
             if(curr.Cursor != Cursors.Default && curr != Map.source && curr != Map.destination && curr.BackColor != Map.obstacleColor) {
 
-                curr.Weight = curr.WeightValue;
+                curr.weight = curr.WeightValue;
                 curr.Image = Map.weightInitialImage;
-                Map.weightedNodes++;
+                curr.BackColorChanged += WeightedBackColorChanged;
 
                 if (!Map.weightedGraph) {
 
@@ -108,6 +109,10 @@ namespace Pathfinder {
             }
         }
 
+        public static void WeightedBackColorChanged(object sender, EventArgs e) {
+            
+
+        }
 
         public static void resetClick(object sender, EventArgs e) {
 
@@ -131,7 +136,6 @@ namespace Pathfinder {
                 }
 
             Map.weightedGraph = false;
-            Map.weightedNodes = 0;
             Menu.BFSButton.ForeColor = Color.FromArgb(0, 207, 255);
             Menu.DFSButton.ForeColor = Color.FromArgb(0, 207, 255);
             Map.source = null;
@@ -203,6 +207,17 @@ namespace Pathfinder {
             }
         }
 
+
+        public static void DijkstraClick(object sender, EventArgs e) {
+
+            
+            Algorithm startDijkstra = new Dijkstra();
+
+            startDijkstra.RunningAlgorithm.Add(new Thread(startDijkstra.StartAlgorithm));
+            startDijkstra.RunningAlgorithm[startDijkstra.RunningAlgorithm.Count - 1].Start();
+            
+        }
+
         public static void MazeClick(object sender, EventArgs e) {
 
             Algorithm startMazeBacktracker = new MazeBacktracker();
@@ -250,7 +265,7 @@ namespace Pathfinder {
         public static void weightButtonClick(object sender, EventArgs e) {
 
 
-            foreach (var i in Map.labels) i.Cursor = Map.weightedCursor;
+            if(Menu.weightButton.ForeColor != Color.Red) foreach (var i in Map.labels) i.Cursor = Map.weightedCursor;
                  
         }
         

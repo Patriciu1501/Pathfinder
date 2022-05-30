@@ -6,8 +6,10 @@ namespace Pathfinder {
 
         public readonly byte WeightValue = 5;
         public readonly byte UnweightValue = 1;
+        public readonly int INF = int.MaxValue;
 
-        public byte Weight { get; set; }
+        public byte weight;
+        public int distance;
     }
 }
 

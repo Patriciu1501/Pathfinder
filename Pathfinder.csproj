@@ -90,6 +90,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Exceptions.txt" />
     <Content Include="Images\destination.png" />
     <Content Include="Images\destinationReached.png" />
     <Content Include="Images\sourcePath.png" />

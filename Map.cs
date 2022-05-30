@@ -35,7 +35,6 @@ namespace Pathfinder {
         public static bool destinationFlagAdded;
 
         public static bool weightedGraph;
-        public static int weightedNodes;
         public static Cursor weightedCursor;
 
         public static bool buildMap;
@@ -79,7 +78,8 @@ namespace Pathfinder {
                     labels[i, j].Location = new Point(j > 0 ? labels[i, j - 1].Location.X + labels[i, j - 1].Width : 0, height);
                     labels[i, j].MouseMove += Events.labelMouseMove;
                     labels[i, j].Name = i + " " + j;
-                    labels[i, j].Weight = labels[i, j].UnweightValue;
+                    labels[i, j].weight = labels[i, j].UnweightValue;
+                    labels[i, j].distance = labels[i, j].INF;
                     labels[i, j].MouseLeave += Events.labelMouseLeave;
                     labels[i, j].MouseDown += Events.labelMouseDown;
                     if(Window.gridOn) labels[i, j].Paint += Events.PaintGrid;

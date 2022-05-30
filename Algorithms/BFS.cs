@@ -1,7 +1,7 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
 using System.Threading;
-using System.Windows.Forms;
+
 
 
 namespace Pathfinder.Algorithms {
@@ -20,23 +20,22 @@ namespace Pathfinder.Algorithms {
 
             algorithmName = AlgorithmName.BFS;
             Tutorial.algorithmLaunched = true;
-            Queue<Label> toVisit = new Queue<Label>();
+            Queue<OOPLabel> toVisit = new Queue<OOPLabel>();
             toVisit.Enqueue(Map.source);
             path.Add(Map.source, Map.source);
 
             while (!destinationFound && toVisit.Count > 0) {
 
+                for (int i = 0; i < (adjancecyList[toVisit.Peek()] as List<OOPLabel>).Count; i++) {
 
-                for (int i = 0; i < (adjancecyList[toVisit.Peek()] as List<Label>).Count; i++) {
+                    if (!path.Contains((adjancecyList[toVisit.Peek()] as List<OOPLabel>)[i])) {
 
-                    if (!path.Contains((adjancecyList[toVisit.Peek()] as List<Label>)[i])) {
-
-                        path.Add((adjancecyList[toVisit.Peek()] as List<Label>)[i], toVisit.Peek());
-                        toVisit.Enqueue((adjancecyList[toVisit.Peek()] as List<Label>)[i]);
-                        (adjancecyList[toVisit.Peek()] as List<Label>)[i].BackColor = Map.searchColorBorder;
+                        path.Add((adjancecyList[toVisit.Peek()] as List<OOPLabel>)[i], toVisit.Peek());
+                        toVisit.Enqueue((adjancecyList[toVisit.Peek()] as List<OOPLabel>)[i]);
+                        (adjancecyList[toVisit.Peek()] as List<OOPLabel>)[i].BackColor = Map.searchColorBorder;
 
 
-                        if ((adjancecyList[toVisit.Peek()] as List<Label>)[i] == Map.destination) {
+                        if ((adjancecyList[toVisit.Peek()] as List<OOPLabel>)[i] == Map.destination) {
 
                             destinationFound = true;
                             Map.destination.Image = Map.destinationReachedImage;

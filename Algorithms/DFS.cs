@@ -28,7 +28,7 @@ namespace Pathfinder.Algorithms {
         }
 
     
-        public void Helper(Label sursa, Label prev, ref bool stopFunciton) {
+        public void Helper(OOPLabel sursa, OOPLabel prev, ref bool stopFunciton) {
 
             if(sursa == Map.destination) {
 
@@ -47,7 +47,7 @@ namespace Pathfinder.Algorithms {
 
             Menu.ModifyExploredNodes();
 
-            foreach (var i in adjancecyList[sursa] as List<Label>) 
+            foreach (var i in adjancecyList[sursa] as List<OOPLabel>) 
                 if (!path.Contains(i) && stopFunciton == false) Helper(i, sursa, ref stopFunciton);
 
         }

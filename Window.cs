@@ -15,6 +15,10 @@
       
         static Window() {
 
+
+            
+
+
             form = new Form();
             form.Controls.Add(Menu.topBar);
             DialogResult gridResult = MessageBox.Show("Turn grid on?", "Grid activator", MessageBoxButtons.YesNo);

@@ -33,7 +33,6 @@ namespace Pathfinder {
         public static Label speedLabel;
         public static Button speedUpButton;
         public static Button speedDownButton;
-        public static Tutorial tutorial;
 
         public static Label topBar;
         public static Label countObstaclesLabel;
@@ -55,7 +54,7 @@ namespace Pathfinder {
             countObstaclesLabel = new Label() { Visible = true };
             exploredNodesLabel = new Label() { Visible = true };
             weightButton = new Button() { Visible = true };
-            tutorial = new Tutorial();
+
 
             resetButton.FlatStyle = FlatStyle.Flat;
             resetButton.FlatAppearance.BorderSize = 0;
@@ -120,7 +119,7 @@ namespace Pathfinder {
 
             AStarButton.FlatStyle = FlatStyle.Flat;
             AStarButton.FlatAppearance.BorderSize = 0;
-            //DijkstraButton.Click += Events.DFSClick;
+            DijkstraButton.Click += Events.DijkstraClick;
             AStarButton.Text = "&A*";
             AStarButton.Location = new Point(DijkstraButton.Location.X + DijkstraButton.Width, 0);
             AStarButton.ForeColor = Color.FromArgb(0, 207, 255);
@@ -228,7 +227,7 @@ namespace Pathfinder {
             topBar.Controls.Add(Tutorial.tutorialEventNotifier);
 
 
-            Tutorial.runningNotifier = new System.Threading.Thread(tutorial.runNotifier);
+            Tutorial.runningNotifier = new System.Threading.Thread(Tutorial.runNotifier);
         }
 
 

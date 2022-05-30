@@ -34,7 +34,6 @@ namespace Pathfinder.Algorithms {
 
 
             Map.weightedGraph = false;
-            Map.weightedNodes = 0;
             Menu.BFSButton.ForeColor = Color.FromArgb(0, 207, 255);
             Menu.DFSButton.ForeColor = Color.FromArgb(0, 207, 255);
             Map.destination = null;
@@ -81,7 +80,7 @@ namespace Pathfinder.Algorithms {
             }
 
 
-            algorithmState = AlgorithmState.NeverFinished;
+            algorithmState = AlgorithmState.Finished;
             Thread.Sleep(500);
         }
 

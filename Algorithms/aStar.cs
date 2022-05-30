@@ -5,6 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Pathfinder.Algorithms {
-    class aStar {
+    class aStar: Algorithm {
     }
 }

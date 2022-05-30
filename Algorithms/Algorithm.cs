@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Collections.Specialized;
-using System.Windows.Forms;
+using System.Drawing;
 
 namespace Pathfinder.Algorithms {
 
@@ -14,10 +14,11 @@ namespace Pathfinder.Algorithms {
         public static AlgorithmSpeed algorithmSpeed;
         public static AlgorithmName algorithmName;
         public static List<Thread> runningAlgorithm;
+        public static bool destinationFound;
+
         public List<Thread> RunningAlgorithm { get => runningAlgorithm; set => runningAlgorithm = value; } // fac asta ca sa pot accesa membrul static in asociere cu un obiect
         public OrderedDictionary adjancecyList;
         public OrderedDictionary path;
-        public static bool destinationFound;
 
         static Algorithm() {  // initializez membrii statici intr-un constructor static
 
@@ -46,13 +47,19 @@ namespace Pathfinder.Algorithms {
                 runningAlgorithm[runningAlgorithm.Count - 2].Abort();
                 runningAlgorithm.RemoveAt(runningAlgorithm.Count - 2);
 
-                for (int i = 0; i < Map.labels.GetLength(0); i++)
-                    for (int j = 0; j < Map.labels.GetLength(1); j++)
-                        if (Map.labels[i, j].BackColor != Map.obstacleColor) {
+                for (int i = 0; i < Map.labels.GetLength(0); i++) {
+
+                    for (int j = 0; j < Map.labels.GetLength(1); j++) {
+
+                        if (Map.labels[i, j].Image != null && Map.labels[i, j] != Map.destination && Map.labels[i, j] != Map.source) continue;
+
+                        else if (Map.labels[i, j].BackColor != Map.obstacleColor) {
 
                             Map.labels[i, j].BackColor = Map.initialLabelColor;
                             Map.labels[i, j].Image = null;
                         }
+                    }
+                }
                             
 
                 Map.destination.Image = Map.destinationImage;
@@ -61,6 +68,7 @@ namespace Pathfinder.Algorithms {
                 Menu.exploredNodesLabel.Text = "Explored: 0";
             }
 
+            Menu.weightButton.ForeColor = Color.Red;
             destinationFound = false;
             path = new OrderedDictionary();
             adjancecyList = new OrderedDictionary();
@@ -75,20 +83,20 @@ namespace Pathfinder.Algorithms {
 
         protected void DrawPath() {
 
-            Label last = path[path.Count - 1] as Label;
-            List<Label> lista = new List<Label>();
+            OOPLabel last = path[path.Count - 1] as OOPLabel;
+            List<OOPLabel> lista = new List<OOPLabel>();
             lista.Add(Map.destination);
 
             while (last != Map.source) {
 
                 lista.Add(last);
-                last = path[last] as Label;
+                last = path[last] as OOPLabel;
             }
 
             lista.Add(Map.source);
             lista.Reverse();
 
-            Label tempSource = Map.source;
+            OOPLabel tempSource = Map.source;
 
             foreach (var i in lista) {
 
@@ -98,13 +106,15 @@ namespace Pathfinder.Algorithms {
                 i.Image = Map.sourcePath;
                 tempSource.BackColor = Map.pathColor;
             }
+
+            Menu.weightButton.ForeColor = Color.FromArgb(0, 207, 255);
         }
 
         public void createAdjencecyList() {
 
 
             adjancecyList = new OrderedDictionary();
-            Func<Label, bool> NeighbourNotObstacle = neighbour => neighbour.BackColor == Map.obstacleColor ? false : true;
+            Func<OOPLabel, bool> NeighbourNotObstacle = neighbour => neighbour.BackColor == Map.obstacleColor ? false : true;
 
             for (int i = 0; i < Map.labels.GetLength(0); i++) {
 
@@ -112,77 +122,77 @@ namespace Pathfinder.Algorithms {
 
                     if (Map.labels[i, j].BackColor == Map.obstacleColor) continue;
 
-                    adjancecyList.Add(Map.labels[i, j], new List<Label>());
+                    adjancecyList.Add(Map.labels[i, j], new List<OOPLabel>());
 
                     if (i == 0 && j == 0) {
 
-                        if (NeighbourNotObstacle(Map.labels[i + 1, j])) (adjancecyList[Map.labels[i, j]] as List<Label>).Add(Map.labels[i + 1, j]);
-                        if (NeighbourNotObstacle(Map.labels[i, j + 1])) (adjancecyList[Map.labels[i, j]] as List<Label>).Add(Map.labels[i, j + 1]);
+                        if (NeighbourNotObstacle(Map.labels[i + 1, j])) (adjancecyList[Map.labels[i, j]] as List<OOPLabel>).Add(Map.labels[i + 1, j]);
+                        if (NeighbourNotObstacle(Map.labels[i, j + 1])) (adjancecyList[Map.labels[i, j]] as List<OOPLabel>).Add(Map.labels[i, j + 1]);
                     }
 
                     else if (i == 0 && (j != 0 && j != Map.labels.GetLength(1) - 1)) {
 
-                        if (NeighbourNotObstacle(Map.labels[i + 1, j])) (adjancecyList[Map.labels[i, j]] as List<Label>).Add(Map.labels[i + 1, j]);
-                        if (NeighbourNotObstacle(Map.labels[i, j + 1])) (adjancecyList[Map.labels[i, j]] as List<Label>).Add(Map.labels[i, j + 1]);
-                        if (NeighbourNotObstacle(Map.labels[i, j - 1])) (adjancecyList[Map.labels[i, j]] as List<Label>).Add(Map.labels[i, j - 1]);
+                        if (NeighbourNotObstacle(Map.labels[i + 1, j])) (adjancecyList[Map.labels[i, j]] as List<OOPLabel>).Add(Map.labels[i + 1, j]);
+                        if (NeighbourNotObstacle(Map.labels[i, j + 1])) (adjancecyList[Map.labels[i, j]] as List<OOPLabel>).Add(Map.labels[i, j + 1]);
+                        if (NeighbourNotObstacle(Map.labels[i, j - 1])) (adjancecyList[Map.labels[i, j]] as List<OOPLabel>).Add(Map.labels[i, j - 1]);
                     }
 
                     else if (i == 0 && j == Map.labels.GetLength(1) - 1) {
 
-                        if (NeighbourNotObstacle(Map.labels[i + 1, j])) (adjancecyList[Map.labels[i, j]] as List<Label>).Add(Map.labels[i + 1, j]);
-                        if (NeighbourNotObstacle(Map.labels[i, j - 1])) (adjancecyList[Map.labels[i, j]] as List<Label>).Add(Map.labels[i, j - 1]);
+                        if (NeighbourNotObstacle(Map.labels[i + 1, j])) (adjancecyList[Map.labels[i, j]] as List<OOPLabel>).Add(Map.labels[i + 1, j]);
+                        if (NeighbourNotObstacle(Map.labels[i, j - 1])) (adjancecyList[Map.labels[i, j]] as List<OOPLabel>).Add(Map.labels[i, j - 1]);
                     }
 
 
                     else if (j == 0 && (i != 0 && i != Map.labels.GetLength(0) - 1)) {
 
 
-                        if (NeighbourNotObstacle(Map.labels[i + 1, j])) (adjancecyList[Map.labels[i, j]] as List<Label>).Add(Map.labels[i + 1, j]);
-                        if (NeighbourNotObstacle(Map.labels[i - 1, j])) (adjancecyList[Map.labels[i, j]] as List<Label>).Add(Map.labels[i - 1, j]);
-                        if (NeighbourNotObstacle(Map.labels[i, j + 1])) (adjancecyList[Map.labels[i, j]] as List<Label>).Add(Map.labels[i, j + 1]);
+                        if (NeighbourNotObstacle(Map.labels[i + 1, j])) (adjancecyList[Map.labels[i, j]] as List<OOPLabel>).Add(Map.labels[i + 1, j]);
+                        if (NeighbourNotObstacle(Map.labels[i - 1, j])) (adjancecyList[Map.labels[i, j]] as List<OOPLabel>).Add(Map.labels[i - 1, j]);
+                        if (NeighbourNotObstacle(Map.labels[i, j + 1])) (adjancecyList[Map.labels[i, j]] as List<OOPLabel>).Add(Map.labels[i, j + 1]);
                     }
 
 
                     else if ((i != 0 && i != Map.labels.GetLength(0) - 1) && (j != 0 && j != Map.labels.GetLength(1) - 1)) {
 
-                        if (NeighbourNotObstacle(Map.labels[i + 1, j])) (adjancecyList[Map.labels[i, j]] as List<Label>).Add(Map.labels[i + 1, j]);
-                        if (NeighbourNotObstacle(Map.labels[i - 1, j])) (adjancecyList[Map.labels[i, j]] as List<Label>).Add(Map.labels[i - 1, j]);
-                        if (NeighbourNotObstacle(Map.labels[i, j + 1])) (adjancecyList[Map.labels[i, j]] as List<Label>).Add(Map.labels[i, j + 1]);
-                        if (NeighbourNotObstacle(Map.labels[i, j - 1])) (adjancecyList[Map.labels[i, j]] as List<Label>).Add(Map.labels[i, j - 1]);
+                        if (NeighbourNotObstacle(Map.labels[i + 1, j])) (adjancecyList[Map.labels[i, j]] as List<OOPLabel>).Add(Map.labels[i + 1, j]);
+                        if (NeighbourNotObstacle(Map.labels[i - 1, j])) (adjancecyList[Map.labels[i, j]] as List<OOPLabel>).Add(Map.labels[i - 1, j]);
+                        if (NeighbourNotObstacle(Map.labels[i, j + 1])) (adjancecyList[Map.labels[i, j]] as List<OOPLabel>).Add(Map.labels[i, j + 1]);
+                        if (NeighbourNotObstacle(Map.labels[i, j - 1])) (adjancecyList[Map.labels[i, j]] as List<OOPLabel>).Add(Map.labels[i, j - 1]);
 
                     }
 
 
                     else if (j == Map.labels.GetLength(1) - 1 && (i != 0 && i != Map.labels.GetLength(0) - 1)) {
 
-                        if (NeighbourNotObstacle(Map.labels[i + 1, j])) (adjancecyList[Map.labels[i, j]] as List<Label>).Add(Map.labels[i + 1, j]);
-                        if (NeighbourNotObstacle(Map.labels[i - 1, j])) (adjancecyList[Map.labels[i, j]] as List<Label>).Add(Map.labels[i - 1, j]);
-                        if (NeighbourNotObstacle(Map.labels[i, j - 1])) (adjancecyList[Map.labels[i, j]] as List<Label>).Add(Map.labels[i, j - 1]);
+                        if (NeighbourNotObstacle(Map.labels[i + 1, j])) (adjancecyList[Map.labels[i, j]] as List<OOPLabel>).Add(Map.labels[i + 1, j]);
+                        if (NeighbourNotObstacle(Map.labels[i - 1, j])) (adjancecyList[Map.labels[i, j]] as List<OOPLabel>).Add(Map.labels[i - 1, j]);
+                        if (NeighbourNotObstacle(Map.labels[i, j - 1])) (adjancecyList[Map.labels[i, j]] as List<OOPLabel>).Add(Map.labels[i, j - 1]);
                     }
 
 
                     else if (i == Map.labels.GetLength(0) - 1 && j == 0) {
 
-                        if (NeighbourNotObstacle(Map.labels[i - 1, j])) (adjancecyList[Map.labels[i, j]] as List<Label>).Add(Map.labels[i - 1, j]);
-                        if (NeighbourNotObstacle(Map.labels[i, j + 1])) (adjancecyList[Map.labels[i, j]] as List<Label>).Add(Map.labels[i, j + 1]);
+                        if (NeighbourNotObstacle(Map.labels[i - 1, j])) (adjancecyList[Map.labels[i, j]] as List<OOPLabel>).Add(Map.labels[i - 1, j]);
+                        if (NeighbourNotObstacle(Map.labels[i, j + 1])) (adjancecyList[Map.labels[i, j]] as List<OOPLabel>).Add(Map.labels[i, j + 1]);
                     }
 
 
                     else if (i == Map.labels.GetLength(0) - 1 && (j != 0 && j != Map.labels.GetLength(1) - 1)) {
 
-                        if (NeighbourNotObstacle(Map.labels[i - 1, j])) (adjancecyList[Map.labels[i, j]] as List<Label>).Add(Map.labels[i - 1, j]);
-                        if (NeighbourNotObstacle(Map.labels[i, j + 1])) (adjancecyList[Map.labels[i, j]] as List<Label>).Add(Map.labels[i, j + 1]);
-                        if (NeighbourNotObstacle(Map.labels[i, j - 1])) (adjancecyList[Map.labels[i, j]] as List<Label>).Add(Map.labels[i, j - 1]);
+                        if (NeighbourNotObstacle(Map.labels[i - 1, j])) (adjancecyList[Map.labels[i, j]] as List<OOPLabel>).Add(Map.labels[i - 1, j]);
+                        if (NeighbourNotObstacle(Map.labels[i, j + 1])) (adjancecyList[Map.labels[i, j]] as List<OOPLabel>).Add(Map.labels[i, j + 1]);
+                        if (NeighbourNotObstacle(Map.labels[i, j - 1])) (adjancecyList[Map.labels[i, j]] as List<OOPLabel>).Add(Map.labels[i, j - 1]);
                     }
 
 
                     else if (i == Map.labels.GetLength(0) - 1 && j == Map.labels.GetLength(1) - 1) {
 
-                        if (NeighbourNotObstacle(Map.labels[i - 1, j])) (adjancecyList[Map.labels[i, j]] as List<Label>).Add(Map.labels[i - 1, j]);
-                        if (NeighbourNotObstacle(Map.labels[i, j - 1])) (adjancecyList[Map.labels[i, j]] as List<Label>).Add(Map.labels[i, j - 1]);
+                        if (NeighbourNotObstacle(Map.labels[i - 1, j])) (adjancecyList[Map.labels[i, j]] as List<OOPLabel>).Add(Map.labels[i - 1, j]);
+                        if (NeighbourNotObstacle(Map.labels[i, j - 1])) (adjancecyList[Map.labels[i, j]] as List<OOPLabel>).Add(Map.labels[i, j - 1]);
                     }
 
-                    if ((adjancecyList[Map.labels[i, j]] as List<Label>).Count == 0) adjancecyList.RemoveAt(adjancecyList.Count - 1); // celulele "inconjurate" de obstacole nu vor fi adaugate
+                    if ((adjancecyList[Map.labels[i, j]] as List<OOPLabel>).Count == 0) adjancecyList.RemoveAt(adjancecyList.Count - 1); // celulele "inconjurate" de obstacole nu vor fi adaugate
                 }
 
             }
