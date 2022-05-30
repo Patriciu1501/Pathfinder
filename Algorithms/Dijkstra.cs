@@ -1,10 +1,8 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
+
 
 namespace Pathfinder.Algorithms {
 
@@ -83,7 +81,6 @@ namespace Pathfinder.Algorithms {
 
     class Dijkstra : Algorithm {
 
-
         public override void StartAlgorithm() {
 
             base.StartAlgorithm();
@@ -103,6 +100,7 @@ namespace Pathfinder.Algorithms {
             MinPriorityQueue distances = new MinPriorityQueue();
             Map.source.distance = 0;
             distances.InsertElement(Map.source);
+            path.Add(Map.source, Map.source);
 
 
             for(int i = 0; i < adjancecyList.Count; i++) {
@@ -110,29 +108,31 @@ namespace Pathfinder.Algorithms {
                 if (destinationFound) break;
 
                 OOPLabel minUnprocessed = distances.peek;
-                if (minUnprocessed == null) break; // va fi null cand lista distances va fi goala, situatia este atunci cand nu se poate gasi destinatia, 
+                if (minUnprocessed == null) break; // va fi null cand lista distances va fi goala, adica cand nu se poate gasi destinatia
                 minUnprocessed.BackColor = Map.searchColor;
+                if (minUnprocessed.weight == minUnprocessed.WeightValue) minUnprocessed.Image = Map.weightSearchedImage;
                 visitedNodes.Add(minUnprocessed);
 
                 Thread.Sleep((int)algorithmSpeed);
 
-                foreach (var j in adjancecyList[minUnprocessed] as List<OOPLabel>) {
+                foreach (var neighbour in adjancecyList[minUnprocessed] as List<OOPLabel>) {
                
-                    if (visitedNodes.Contains(j)) continue;
+                    if (visitedNodes.Contains(neighbour)) continue;
 
-                    if(minUnprocessed.distance + j.weight < j.distance) {
+                    if(minUnprocessed.distance + neighbour.weight < neighbour.distance) {
 
-                        j.BackColor = Map.searchColorBorder;
-                        j.distance = minUnprocessed.distance + j.weight;
-                        if (!path.Contains(j)) path.Add(j, minUnprocessed);
-                        else path[j] = minUnprocessed;
+                        neighbour.BackColor = Map.searchColorBorder;
+                        if (neighbour.weight == neighbour.WeightValue) neighbour.Image = Map.weightSearchedBorderImage;
+                        neighbour.distance = minUnprocessed.distance + neighbour.weight;
+                        if (!path.Contains(neighbour)) path.Add(neighbour, minUnprocessed);
+                        else path[neighbour] = minUnprocessed;
                     }
 
-                    if (distances.Contains(j)) distances.Remove(j);
-                    distances.InsertElement(j);
+                    if (distances.Contains(neighbour)) distances.Remove(neighbour);
+                    distances.InsertElement(neighbour);
                     
 
-                    if(j == Map.destination) {
+                    if(neighbour == Map.destination) {
 
                         destinationFound = true;
                         break;
@@ -143,9 +143,10 @@ namespace Pathfinder.Algorithms {
 
             }
 
-            if (destinationFound) DrawPath();
+            if(destinationFound) DrawPath();
             algorithmState = AlgorithmState.Finished;
-            Menu.weightButton.ForeColor = Color.FromArgb(0, 207, 255);
+            Menu.SetExploredNodes();
+            Menu.weightButton.ForeColor = Menu.buttonForeColor;
 
             foreach (var i in Map.labels) i.distance = int.MaxValue;
 

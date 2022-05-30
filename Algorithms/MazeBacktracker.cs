@@ -8,8 +8,8 @@ namespace Pathfinder.Algorithms {
     class MazeBacktracker: Algorithm {
 
         private Random randomNumber;
-        private List<Tuple<Label, Label>> permanentPairs;
-        private Dictionary<Label, List<Label>> neighbours;
+        private List<Tuple<OOPLabel, OOPLabel>> permanentPairs;
+        private Dictionary<OOPLabel, List<OOPLabel>> neighbours;
         private OOPLabel startPoint;
 
         public override void StartAlgorithm() {
@@ -33,9 +33,10 @@ namespace Pathfinder.Algorithms {
                 }
 
 
+            Menu.weightButton.ForeColor = Menu.buttonForeColor;
             Map.weightedGraph = false;
-            Menu.BFSButton.ForeColor = Color.FromArgb(0, 207, 255);
-            Menu.DFSButton.ForeColor = Color.FromArgb(0, 207, 255);
+            Menu.BFSButton.ForeColor = Menu.buttonForeColor;
+            Menu.DFSButton.ForeColor = Menu.buttonForeColor;
             Map.destination = null;
             Map.source = null;
             Map.destinationFlagAdded = false;
@@ -45,8 +46,8 @@ namespace Pathfinder.Algorithms {
             Tutorial.algorithmLaunched = true;
             Menu.countObstaclesLabel.Text = "Obstacles: 0";
             randomNumber = new Random();
-            neighbours = new Dictionary<Label, List<Label>>();
-            permanentPairs = new List<Tuple<Label, Label>>();
+            neighbours = new Dictionary<OOPLabel, List<OOPLabel>>();
+            permanentPairs = new List<Tuple<OOPLabel, OOPLabel>>();
             createAdjencecyList();
 
             startPoint = Map.labels[0, 0];
@@ -86,19 +87,19 @@ namespace Pathfinder.Algorithms {
 
 
 
-        private void Helper(Label curr, Dictionary<Label, List<Label>> neighbours, List<Tuple<Label, Label>> permanentPairs) {
+        private void Helper(OOPLabel curr, Dictionary<OOPLabel, List<OOPLabel>> neighbours, List<Tuple<OOPLabel, OOPLabel>> permanentPairs) {
 
             if (neighbours.ContainsKey(curr)) return;
 
             Tuple<int, int> currPos = Map.GetPos(curr.Name);
-            List<Label> vecini = adjancecyList[curr] as List<Label>;
-            neighbours.Add(curr, new List<Label>());
+            List<OOPLabel> vecini = adjancecyList[curr] as List<OOPLabel>;
+            neighbours.Add(curr, new List<OOPLabel>());
  
 
 
             for (int i = 0; i < vecini.Count; i++) {
 
-                List<Label> farVecini = adjancecyList[vecini[i]] as List<Label>;
+                List<OOPLabel> farVecini = adjancecyList[vecini[i]] as List<OOPLabel>;
 
                 for (int j = 0; j < farVecini.Count; j++) {
 
@@ -127,7 +128,7 @@ namespace Pathfinder.Algorithms {
         }
        
 
-        private string Middle(Tuple<Label,Label> pair) {
+        private string Middle(Tuple<OOPLabel, OOPLabel> pair) {
 
             string result = string.Empty;
 

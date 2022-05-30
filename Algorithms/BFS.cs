@@ -26,16 +26,16 @@ namespace Pathfinder.Algorithms {
 
             while (!destinationFound && toVisit.Count > 0) {
 
-                for (int i = 0; i < (adjancecyList[toVisit.Peek()] as List<OOPLabel>).Count; i++) {
+                foreach (var i in adjancecyList[toVisit.Peek()] as List<OOPLabel>) {
 
-                    if (!path.Contains((adjancecyList[toVisit.Peek()] as List<OOPLabel>)[i])) {
+                    if (!path.Contains(i)) {
 
-                        path.Add((adjancecyList[toVisit.Peek()] as List<OOPLabel>)[i], toVisit.Peek());
-                        toVisit.Enqueue((adjancecyList[toVisit.Peek()] as List<OOPLabel>)[i]);
-                        (adjancecyList[toVisit.Peek()] as List<OOPLabel>)[i].BackColor = Map.searchColorBorder;
+                        path.Add(i, toVisit.Peek());
+                        toVisit.Enqueue(i);
+                        i.BackColor = Map.searchColorBorder;
 
 
-                        if ((adjancecyList[toVisit.Peek()] as List<OOPLabel>)[i] == Map.destination) {
+                        if (i == Map.destination) {
 
                             destinationFound = true;
                             Map.destination.Image = Map.destinationReachedImage;
@@ -46,7 +46,6 @@ namespace Pathfinder.Algorithms {
 
                 }
 
-                Menu.ModifyExploredNodes();
                 toVisit.Peek().BackColor = Map.pathColor;
                 Thread.Sleep((int)algorithmSpeed);
                 toVisit.Peek().BackColor = Map.searchColor;
@@ -55,6 +54,7 @@ namespace Pathfinder.Algorithms {
             }
 
             if(destinationFound) DrawPath();
+            Menu.SetExploredNodes();
             algorithmState = AlgorithmState.Finished;
 
         }

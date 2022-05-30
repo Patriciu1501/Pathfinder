@@ -2,7 +2,6 @@
     
     using System.Windows.Forms;
 
-
     static class Window {
 
         public static readonly int width = Screen.PrimaryScreen.Bounds.Width;

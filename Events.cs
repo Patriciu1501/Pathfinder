@@ -3,13 +3,12 @@ using System.Windows.Forms;
 using System.Drawing;
 using Pathfinder.Algorithms;
 using System.Threading;
-using System.IO;
+
 
 namespace Pathfinder {
     public static class Events {
 
-
-        private static bool destinationDragging = false;
+        public static bool destinationDragging = false;
 
         public static void labelMouseMove(object sender, MouseEventArgs e) {
 
@@ -19,7 +18,9 @@ namespace Pathfinder {
 
             else if (destinationDragging && curr != Map.destination && curr.BackColor != Map.obstacleColor && e.Button == MouseButtons.Left) {
 
+                Map.destination.Image = null;
                 Map.destination = curr;
+                Map.destination.Image = Map.destinationImage;
                 Algorithm.algorithmSpeed = Algorithm.AlgorithmSpeed.Instant;
 
                 if (Algorithm.algorithmName == Algorithm.AlgorithmName.BFS) BFSClick(sender, e);
@@ -66,15 +67,23 @@ namespace Pathfinder {
             if(curr.Cursor != Cursors.Default && curr != Map.source && curr != Map.destination && curr.BackColor != Map.obstacleColor) {
 
                 curr.weight = curr.WeightValue;
-                curr.Image = Map.weightInitialImage;
-                curr.BackColorChanged += WeightedBackColorChanged;
+
+                if (curr.BackColor == Color.Aqua) {
+
+                    curr.BackColor = Map.initialLabelColor;
+                    curr.Image = Map.weightInitialImage;
+                }
+
+                else if (curr.BackColor == Map.searchColor) curr.Image = Map.weightSearchedImage;
+                else if (curr.BackColor == Map.searchColorBorder) curr.Image = Map.weightSearchedBorderImage;
+                else if(curr.BackColor == Map.pathColor) curr.Image = Map.weightPathImage;
+                
 
                 if (!Map.weightedGraph) {
 
                     Map.weightedGraph = true;
                     Menu.BFSButton.ForeColor = Color.Red;
                     Menu.DFSButton.ForeColor = Color.Red;
-
                 }
 
                 foreach (var i in Map.labels) i.Cursor = Cursors.Default;
@@ -109,35 +118,33 @@ namespace Pathfinder {
             }
         }
 
-        public static void WeightedBackColorChanged(object sender, EventArgs e) {
-            
-
-        }
 
         public static void resetClick(object sender, EventArgs e) {
 
             
             if(Algorithm.runningAlgorithm.Count > 0)
-                for (int i = 0; i < Algorithm.runningAlgorithm.Count; i++) {
+                foreach(var thread in Algorithm.runningAlgorithm) {
 
-                    if (Algorithm.runningAlgorithm[i].ThreadState == ThreadState.Suspended) // you must resume a suspended thread before abort
-                        Algorithm.runningAlgorithm[i].Resume();
+                    if (thread.ThreadState == ThreadState.Suspended) // you must resume a suspended thread before abort
+                        thread.Resume();
 
-                    Algorithm.runningAlgorithm[i].Abort();
-                    Algorithm.runningAlgorithm.RemoveAt(i);
-                }            
-            
-
-            for (int i = 0; i < Map.labels.GetLength(0); i++)
-                for (int j = 0; j < Map.labels.GetLength(1); j++) {
-
-                    Map.labels[i, j].BackColor = Map.initialLabelColor;
-                    Map.labels[i, j].Image = null;
+                    thread.Abort();
                 }
 
+            Algorithm.runningAlgorithm.Clear();
+            
+
+            foreach(var node in Map.labels) {
+
+                node.Image = null;
+                node.BackColor = Map.initialLabelColor;
+                node.weight = node.UnweightValue;
+            }
+            
             Map.weightedGraph = false;
-            Menu.BFSButton.ForeColor = Color.FromArgb(0, 207, 255);
-            Menu.DFSButton.ForeColor = Color.FromArgb(0, 207, 255);
+            Menu.weightButton.ForeColor = Menu.buttonForeColor;
+            Menu.BFSButton.ForeColor = Menu.buttonForeColor;
+            Menu.DFSButton.ForeColor = Menu.buttonForeColor;
             Map.source = null;
             Map.destination = null;
             Map.sourceFlagAdded = false;
@@ -145,8 +152,7 @@ namespace Pathfinder {
             Menu.ResetCountObstacles();
             Menu.ResetExploredNodes();
             Algorithm.algorithmState = Algorithm.AlgorithmState.NeverFinished;
-            Algorithm.algorithmName = Algorithm.AlgorithmName.None;
-            Algorithm.algorithmSpeed = Algorithm.AlgorithmSpeed.Standard;
+            
         }
 
 
@@ -188,6 +194,7 @@ namespace Pathfinder {
             if (Menu.BFSButton.ForeColor != Color.Red) {
 
                 Algorithm startBFS = new BFS();
+                Algorithm.algorithmSpeed = Algorithm.AlgorithmSpeed.Standard;
 
                 startBFS.RunningAlgorithm.Add(new Thread(startBFS.StartAlgorithm));
                 startBFS.RunningAlgorithm[startBFS.RunningAlgorithm.Count - 1].Start();
@@ -201,6 +208,7 @@ namespace Pathfinder {
             if (Menu.DFSButton.ForeColor != Color.Red) {
 
                 Algorithm startDFS = new DFS();
+                Algorithm.algorithmSpeed = Algorithm.AlgorithmSpeed.Standard;
 
                 startDFS.RunningAlgorithm.Add(new Thread(startDFS.StartAlgorithm));
                 startDFS.RunningAlgorithm[startDFS.RunningAlgorithm.Count - 1].Start();
@@ -212,6 +220,7 @@ namespace Pathfinder {
 
             
             Algorithm startDijkstra = new Dijkstra();
+            Algorithm.algorithmSpeed = Algorithm.AlgorithmSpeed.Standard;
 
             startDijkstra.RunningAlgorithm.Add(new Thread(startDijkstra.StartAlgorithm));
             startDijkstra.RunningAlgorithm[startDijkstra.RunningAlgorithm.Count - 1].Start();

@@ -24,7 +24,6 @@ namespace Pathfinder.Algorithms {
 
             algorithmSpeed = AlgorithmSpeed.Standard;
             algorithmState = AlgorithmState.NeverFinished;
-            algorithmName = AlgorithmName.None;
             runningAlgorithm = new List<Thread>();
         }
 
@@ -47,18 +46,11 @@ namespace Pathfinder.Algorithms {
                 runningAlgorithm[runningAlgorithm.Count - 2].Abort();
                 runningAlgorithm.RemoveAt(runningAlgorithm.Count - 2);
 
-                for (int i = 0; i < Map.labels.GetLength(0); i++) {
+                foreach(var node in Map.labels) {
 
-                    for (int j = 0; j < Map.labels.GetLength(1); j++) {
+                    if (node.weight == node.WeightValue) node.Image = Map.weightInitialImage;
 
-                        if (Map.labels[i, j].Image != null && Map.labels[i, j] != Map.destination && Map.labels[i, j] != Map.source) continue;
-
-                        else if (Map.labels[i, j].BackColor != Map.obstacleColor) {
-
-                            Map.labels[i, j].BackColor = Map.initialLabelColor;
-                            Map.labels[i, j].Image = null;
-                        }
-                    }
+                    if (node.BackColor != Map.obstacleColor) node.BackColor = Map.initialLabelColor;
                 }
                             
 
@@ -76,6 +68,7 @@ namespace Pathfinder.Algorithms {
             Map.source.Image = Map.sourceSearchesImage;
             Map.source.BackColor = Map.searchColor;
 
+            if (Events.destinationDragging) algorithmSpeed = AlgorithmSpeed.Instant; // daca algoritmul se lanseaza cand "trag" de destinatie, viteza va fi instanta
             algorithmState = AlgorithmState.Running;
 
         }
@@ -89,6 +82,7 @@ namespace Pathfinder.Algorithms {
 
             while (last != Map.source) {
 
+                if (last == null) break;
                 lista.Add(last);
                 last = path[last] as OOPLabel;
             }
@@ -107,7 +101,7 @@ namespace Pathfinder.Algorithms {
                 tempSource.BackColor = Map.pathColor;
             }
 
-            Menu.weightButton.ForeColor = Color.FromArgb(0, 207, 255);
+            Menu.weightButton.ForeColor = Menu.buttonForeColor;
         }
 
         public void createAdjencecyList() {

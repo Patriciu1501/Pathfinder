@@ -12,8 +12,8 @@ namespace Pathfinder {
         private const byte labelsRowNumber = 25;
         private const byte labelsColumnNumber = 31;
 
-        private static readonly int labelHeight = (Window.height - Menu.topBar.Height) / labelsRowNumber;
-        private static readonly int labelWidth = Window.width / labelsColumnNumber + 1; 
+        private static readonly int labelHeight;
+        private static readonly int labelWidth;
 
         public static readonly Color initialLabelColor;
         public static readonly Color obstacleColor;
@@ -29,11 +29,12 @@ namespace Pathfinder {
         public static readonly Image weightInitialImage;
         public static readonly Image weightSearchedImage;
         public static readonly Image weightSearchedBorderImage;
+        public static readonly Image weightPathImage;
+
         public static OOPLabel[,] labels;
         public static OOPLabel source, destination;
         public static bool sourceFlagAdded;
         public static bool destinationFlagAdded;
-
         public static bool weightedGraph;
         public static Cursor weightedCursor;
 
@@ -56,7 +57,10 @@ namespace Pathfinder {
             weightInitialImage = Image.FromFile(fullPath + "weightInitial.png");
             weightSearchedImage = Image.FromFile(fullPath + "weightSearched.png");
             weightSearchedBorderImage = Image.FromFile(fullPath + "weightSearchedBorder.png");
+            weightPathImage = Image.FromFile(fullPath + "weightPath.png");
 
+            labelHeight = (Window.height - Menu.topBar.Height) / labelsRowNumber;
+            labelWidth = Window.width / labelsColumnNumber + 1;
 
             initialLabelColor = Color.FromArgb(179, 239, 255);
             obstacleColor = Color.FromArgb(40, 50, 90);

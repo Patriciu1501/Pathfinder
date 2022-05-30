@@ -23,8 +23,8 @@ namespace Pathfinder.Algorithms {
             bool stopFunction = false;
             Helper(Map.source, Map.source, ref stopFunction);
             if(destinationFound) DrawPath();
+            Menu.SetExploredNodes();
             algorithmState = AlgorithmState.Finished;
-
         }
 
     
@@ -44,8 +44,6 @@ namespace Pathfinder.Algorithms {
             sursa.BackColor = Map.pathColor;
             Thread.Sleep((int)algorithmSpeed);
             sursa.BackColor = Map.searchColor;
-
-            Menu.ModifyExploredNodes();
 
             foreach (var i in adjancecyList[sursa] as List<OOPLabel>) 
                 if (!path.Contains(i) && stopFunciton == false) Helper(i, sursa, ref stopFunciton);

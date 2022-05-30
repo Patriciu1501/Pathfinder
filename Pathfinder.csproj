@@ -98,6 +98,7 @@
     <Content Include="Images\sourceSearches.png" />
     <Content Include="Images\weightedCursor.cur" />
     <Content Include="Images\weightInitial.png" />
+    <Content Include="Images\weightPath.png" />
     <Content Include="Images\weightSearched.png" />
     <Content Include="Images\weightSearchedBorder.png" />
   </ItemGroup>
