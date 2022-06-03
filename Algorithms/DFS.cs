@@ -20,15 +20,14 @@ namespace Pathfinder.Algorithms {
 
             algorithmName = AlgorithmName.DFS;
             Tutorial.algorithmLaunched = true;
-            bool stopFunction = false;
-            Helper(Map.source, Map.source, ref stopFunction);
+            Helper(Map.source, Map.source);
             if(destinationFound) DrawPath();
             Menu.SetExploredNodes();
             algorithmState = AlgorithmState.Finished;
         }
 
     
-        public void Helper(OOPLabel sursa, OOPLabel prev, ref bool stopFunciton) {
+        public bool Helper(OOPLabel sursa, OOPLabel prev) {
 
             if(sursa == Map.destination) {
 
@@ -36,8 +35,7 @@ namespace Pathfinder.Algorithms {
                 Map.destination.BackColor = Map.searchColorBorder;
                 Map.destination.Image = Map.destinationReachedImage;
                 destinationFound = true;
-                stopFunciton = true;
-                return;
+                return true;
             }
 
             path.Add(sursa, prev);
@@ -45,9 +43,10 @@ namespace Pathfinder.Algorithms {
             Thread.Sleep((int)algorithmSpeed);
             sursa.BackColor = Map.searchColor;
 
-            foreach (var i in adjancecyList[sursa] as List<OOPLabel>) 
-                if (!path.Contains(i) && stopFunciton == false) Helper(i, sursa, ref stopFunciton);
+            foreach (var i in adjancecyList[sursa] as List<OOPLabel>)
+                if (!path.Contains(i) && Helper(i, sursa)) return true;
 
+            return false; // se returneaza false => la apelul precedent se va continua iteratia, apelarea, in cazul daca acel for nu s-a terminat
         }
  
     }
