@@ -27,7 +27,7 @@ namespace Pathfinder.Algorithms {
             Map.source.fScore = Map.source.hScore;
             coada.InsertElement(Map.source);
 
-            while(coada.count > 0) {
+            while(coada.count > 0 && coada.peek != null) {
 
                 OOPLabel curr = coada.peek;
 
@@ -36,8 +36,6 @@ namespace Pathfinder.Algorithms {
                     destinationFound = true;
                     break;
                 }
-
-                if (curr == null) break;
 
                 if (curr.IsWeighted())curr.Image = Map.weightSearchedImage;
 
