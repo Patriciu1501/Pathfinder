@@ -26,6 +26,7 @@ namespace Pathfinder {
                 if (Algorithm.algorithmName == Algorithm.AlgorithmName.BFS) BFSClick(sender, e);
                 else if (Algorithm.algorithmName == Algorithm.AlgorithmName.DFS) DFSClick(sender, e);
                 else if (Algorithm.algorithmName == Algorithm.AlgorithmName.Dijkstra) DijkstraClick(sender, e);
+                else if (Algorithm.algorithmName == Algorithm.AlgorithmName.aStar) AStarClick(sender, e);
 
             }
 
@@ -66,7 +67,7 @@ namespace Pathfinder {
 
             if(curr.Cursor != Cursors.Default && curr != Map.source && curr != Map.destination && curr.BackColor != Map.obstacleColor) {
 
-                curr.weight = curr.WeightValue;
+                curr.weight = OOPLabel.WeightValue;
 
                 if (curr.BackColor == Color.Aqua) {
 
@@ -138,9 +139,14 @@ namespace Pathfinder {
 
                 node.Image = null;
                 node.BackColor = Map.initialLabelColor;
-                node.weight = node.UnweightValue;
+                node.weight = OOPLabel.UnweightValue;
+                node.distance = OOPLabel.INF;
+                node.gScore = OOPLabel.INF;
+                node.hScore = OOPLabel.INF;
+                node.fScore = OOPLabel.INF;
             }
-            
+
+
             Map.weightedGraph = false;
             Menu.weightButton.ForeColor = Menu.buttonForeColor;
             Menu.BFSButton.ForeColor = Menu.buttonForeColor;
@@ -169,7 +175,7 @@ namespace Pathfinder {
                     Algorithm.runningAlgorithm[0].Abort();
                 }
 
-                Tutorial.runningNotifier.Abort();
+                Notifier.runningNotifier.Abort();
                 Application.ExitThread();            
             }
         }
@@ -227,6 +233,19 @@ namespace Pathfinder {
             
         }
 
+
+        public static void AStarClick(object sender, EventArgs e) {
+
+
+            Algorithm startAStar = new aStar();
+            Algorithm.algorithmSpeed = Algorithm.AlgorithmSpeed.Standard;
+
+            startAStar.RunningAlgorithm.Add(new Thread(startAStar.StartAlgorithm));
+            startAStar.RunningAlgorithm[startAStar.RunningAlgorithm.Count - 1].Start();
+
+        }
+
+
         public static void MazeClick(object sender, EventArgs e) {
 
             Algorithm startMazeBacktracker = new MazeBacktracker();
@@ -239,29 +258,74 @@ namespace Pathfinder {
 
         public static void speedUpClick(object sender, EventArgs e) {
 
-            if (Algorithm.algorithmSpeed == Algorithm.AlgorithmSpeed.Paused) {
-                
-                Algorithm.algorithmSpeed = Algorithm.AlgorithmSpeed.VerySlow;
-                if(Algorithm.runningAlgorithm[Algorithm.runningAlgorithm.Count - 1].ThreadState == ThreadState.Suspended)
-                Algorithm.runningAlgorithm[Algorithm.runningAlgorithm.Count - 1].Resume();
+ 
+            switch (Algorithm.algorithmSpeed) {
+
+                case Algorithm.AlgorithmSpeed.Paused:
+                    Algorithm.algorithmSpeed = Algorithm.AlgorithmSpeed.VerySlow;
+                    if (Algorithm.runningAlgorithm[Algorithm.runningAlgorithm.Count - 1].ThreadState == ThreadState.Suspended)
+                        Algorithm.runningAlgorithm[Algorithm.runningAlgorithm.Count - 1].Resume();
+                    break;
+
+                case Algorithm.AlgorithmSpeed.VerySlow:
+                    Algorithm.algorithmSpeed = Algorithm.AlgorithmSpeed.Slow;
+                    break;
+
+                case Algorithm.AlgorithmSpeed.Slow:
+                    Algorithm.algorithmSpeed = Algorithm.AlgorithmSpeed.Standard;
+                    break;
+
+                case Algorithm.AlgorithmSpeed.Standard:
+                    Algorithm.algorithmSpeed = Algorithm.AlgorithmSpeed.Fast;
+                    break;
+
+                case Algorithm.AlgorithmSpeed.Fast:
+                    Algorithm.algorithmSpeed = Algorithm.AlgorithmSpeed.VeryFast;
+                    break;
+
+                case Algorithm.AlgorithmSpeed.VeryFast:
+                    Algorithm.algorithmSpeed = Algorithm.AlgorithmSpeed.Instant;
+                    break;             
             }
 
-            else if (Algorithm.algorithmSpeed > Algorithm.AlgorithmSpeed.Instant) Algorithm.algorithmSpeed -= 20;
-            Tutorial.speedModified = true;
+            Notifier.speedModified = true;
 
         }
 
 
         public static void speedDownClick(object sender, EventArgs e) {
 
-            if (Algorithm.algorithmSpeed == Algorithm.AlgorithmSpeed.VerySlow && Algorithm.runningAlgorithm.Count > 0) {
 
-                Algorithm.algorithmSpeed = Algorithm.AlgorithmSpeed.Paused;
-                Algorithm.runningAlgorithm[Algorithm.runningAlgorithm.Count - 1].Suspend();
+            switch (Algorithm.algorithmSpeed) {
+
+                case Algorithm.AlgorithmSpeed.VerySlow:
+                    Algorithm.algorithmSpeed = Algorithm.AlgorithmSpeed.Paused;
+                    Algorithm.runningAlgorithm[Algorithm.runningAlgorithm.Count - 1].Suspend();
+                    break;
+
+                case Algorithm.AlgorithmSpeed.Slow:
+                    Algorithm.algorithmSpeed = Algorithm.AlgorithmSpeed.VerySlow;
+                    break;
+
+                case Algorithm.AlgorithmSpeed.Standard:
+                    Algorithm.algorithmSpeed = Algorithm.AlgorithmSpeed.Slow;
+                    break;
+
+                case Algorithm.AlgorithmSpeed.Fast:
+                    Algorithm.algorithmSpeed = Algorithm.AlgorithmSpeed.Standard;
+                    break;
+
+                case Algorithm.AlgorithmSpeed.VeryFast:
+                    Algorithm.algorithmSpeed = Algorithm.AlgorithmSpeed.Fast;
+                    break;
+
+                case Algorithm.AlgorithmSpeed.Instant:
+                    Algorithm.algorithmSpeed = Algorithm.AlgorithmSpeed.VeryFast;
+                    break;
+
             }
 
-            else if (Algorithm.algorithmSpeed < Algorithm.AlgorithmSpeed.Paused) Algorithm.algorithmSpeed += 20;
-            Tutorial.speedModified = true;
+            Notifier.speedModified = true;
         }
 
 

@@ -1,27 +1,22 @@
 ﻿using Pathfinder.Algorithms;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
 namespace Pathfinder {
-    static class Tutorial {
+    static class Notifier {
 
         const int notificationDelay = 500;
 
-        public static Form tutorialStartLabel;
         public static OOPLabel tutorialEventNotifier;
         public static Thread runningNotifier;
         public static bool speedModified;
         public static bool algorithmLaunched;
 
 
-        static Tutorial() {
+        static Notifier() {
 
-            tutorialStartLabel = new Form() { Size = new Size(500, 500), FormBorderStyle = FormBorderStyle.None };
             tutorialEventNotifier = new OOPLabel() { Visible = false, Size = new Size(Window.width / 5, Window.height / 27) };
             tutorialEventNotifier.FlatStyle = FlatStyle.Flat;
             tutorialEventNotifier.BackColor = Color.Black;
@@ -34,8 +29,6 @@ namespace Pathfinder {
         public static void runNotifier() {
 
             while (true) {
-
-                int nowTime = DateTime.Now.Second;
 
                 try {
 
@@ -117,9 +110,8 @@ namespace Pathfinder {
                     }
                 }
 
-                catch (InvalidOperationException e) {
-
-                }
+                catch (InvalidOperationException) { }
+            
             }
         }
 

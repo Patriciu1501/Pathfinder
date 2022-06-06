@@ -108,7 +108,7 @@ namespace Pathfinder {
 
             DijkstraButton.FlatStyle = FlatStyle.Flat;
             DijkstraButton.FlatAppearance.BorderSize = 0;
-            //DijkstraButton.Click += Events.DFSClick;
+            DijkstraButton.Click += Events.DijkstraClick;
             DijkstraButton.Text = "&Dijkstra";
             DijkstraButton.Location = new Point(DFSButton.Location.X + DFSButton.Width, 0);
             DijkstraButton.ForeColor = buttonForeColor;
@@ -121,7 +121,7 @@ namespace Pathfinder {
 
             AStarButton.FlatStyle = FlatStyle.Flat;
             AStarButton.FlatAppearance.BorderSize = 0;
-            DijkstraButton.Click += Events.DijkstraClick;
+            AStarButton.Click += Events.AStarClick;
             AStarButton.Text = "&A*";
             AStarButton.Location = new Point(DijkstraButton.Location.X + DijkstraButton.Width, 0);
             AStarButton.ForeColor = buttonForeColor;
@@ -210,7 +210,7 @@ namespace Pathfinder {
             speedDownButton.MouseEnter += Events.mouseEnterMenuButton;
             speedDownButton.MouseLeave += Events.mouseLeaveMenuButton;
 
-            Tutorial.tutorialEventNotifier.Location = new Point(speedDownButton.Location.X - (speedLabel.Width * 7), 0);
+            Notifier.tutorialEventNotifier.Location = new Point(speedDownButton.Location.X - (speedLabel.Width * 7), 0);
 
 
             topBar.Controls.Add(exitButton);
@@ -226,10 +226,10 @@ namespace Pathfinder {
             topBar.Controls.Add(MazeButton);
             topBar.Controls.Add(speedUpButton);
             topBar.Controls.Add(speedDownButton);
-            topBar.Controls.Add(Tutorial.tutorialEventNotifier);
+            topBar.Controls.Add(Notifier.tutorialEventNotifier);
 
 
-            Tutorial.runningNotifier = new System.Threading.Thread(Tutorial.runNotifier);
+            Notifier.runningNotifier = new System.Threading.Thread(Notifier.runNotifier);
         }
 
 
@@ -265,7 +265,10 @@ namespace Pathfinder {
                     exploredNodes++;
             }
 
-            exploredNodesLabel.Text = "Explored: " + exploredNodes;
+            try {
+                exploredNodesLabel.Text = "Explored: " + exploredNodes;
+            }
+            catch (Exception) { };
         }
 
 

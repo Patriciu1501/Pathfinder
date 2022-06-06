@@ -63,7 +63,7 @@
     <Compile Include="OOPLabel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Tutorial.cs" />
+    <Compile Include="Notifier.cs" />
     <Compile Include="Window.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">

@@ -1,5 +1,4 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 
 
@@ -12,14 +11,8 @@ namespace Pathfinder.Algorithms {
 
             base.StartAlgorithm();
 
-            if (!adjancecyList.Contains(Map.source)) {
-
-                algorithmState = AlgorithmState.Finished;
-                return;
-            }
-
             algorithmName = AlgorithmName.BFS;
-            Tutorial.algorithmLaunched = true;
+            Notifier.algorithmLaunched = true;
             Queue<OOPLabel> toVisit = new Queue<OOPLabel>();
             toVisit.Enqueue(Map.source);
             path.Add(Map.source, Map.source);

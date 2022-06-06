@@ -9,14 +9,14 @@ namespace Pathfinder.Algorithms {
 
         public enum AlgorithmState { Running, Finished, NeverFinished }   // am creat asta ca sa pot reincepe un algoritm in momentul cand s-a terminat
         // doar cand e neverfinished nu se va sterge practic totul de pe map
-        public enum AlgorithmSpeed : byte {
+        public enum AlgorithmSpeed:byte {
 
-            Paused = 120,
-            VerySlow = 100,
-            Slow = 80,
+            Paused = byte.MaxValue,
+            VerySlow = 150,
+            Slow = 100,
             Standard = 60,
-            Fast = 40,
-            VeryFast = 20,
+            Fast = 30,
+            VeryFast = 10,
             Instant = 0
 
         };

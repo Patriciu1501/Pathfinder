@@ -12,14 +12,8 @@ namespace Pathfinder.Algorithms {
 
             base.StartAlgorithm();
 
-            if (!adjancecyList.Contains(Map.source)) {
-
-                algorithmState = AlgorithmState.Finished;
-                return;
-            }
-
             algorithmName = AlgorithmName.DFS;
-            Tutorial.algorithmLaunched = true;
+            Notifier.algorithmLaunched = true;
             Helper(Map.source, Map.source);
             if(destinationFound) DrawPath();
             Menu.SetExploredNodes();

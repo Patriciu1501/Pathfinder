@@ -41,17 +41,17 @@ namespace Pathfinder.Algorithms {
             Map.source = null;
             Map.destinationFlagAdded = false;
             Map.sourceFlagAdded = false;
+            Notifier.algorithmLaunched = true;
+            Menu.countObstaclesLabel.Text = "Obstacles: 0";
             algorithmName = AlgorithmName.Maze;
             algorithmState = AlgorithmState.Running;
-            Tutorial.algorithmLaunched = true;
-            Menu.countObstaclesLabel.Text = "Obstacles: 0";
             randomNumber = new Random();
             neighbours = new Dictionary<OOPLabel, List<OOPLabel>>();
             permanentPairs = new List<Tuple<OOPLabel, OOPLabel>>();
             createAdjencecyList();
 
             startPoint = Map.labels[0, 0];
-            Helper(startPoint, neighbours, permanentPairs);
+            Helper(startPoint);
 
 
             List<string> labelsNames = new List<string>();
@@ -81,13 +81,13 @@ namespace Pathfinder.Algorithms {
             }
 
 
-            algorithmState = AlgorithmState.NeverFinished; // pun aici neverFinished ca notificatorul sa nu atraga atentia
+            algorithmState = AlgorithmState.NeverFinished; // neverfinished to avoid notifier
             Thread.Sleep(500);
         }
 
 
 
-        private void Helper(OOPLabel curr, Dictionary<OOPLabel, List<OOPLabel>> neighbours, List<Tuple<OOPLabel, OOPLabel>> permanentPairs) {
+        private void Helper(OOPLabel curr) {
 
             if (neighbours.ContainsKey(curr)) return;
 
@@ -96,10 +96,9 @@ namespace Pathfinder.Algorithms {
             neighbours.Add(curr, new List<OOPLabel>());
  
 
+            foreach(var i in vecini) {
 
-            for (int i = 0; i < vecini.Count; i++) {
-
-                List<OOPLabel> farVecini = adjancecyList[vecini[i]] as List<OOPLabel>;
+                List<OOPLabel> farVecini = adjancecyList[i] as List<OOPLabel>;
 
                 for (int j = 0; j < farVecini.Count; j++) {
 
@@ -120,7 +119,7 @@ namespace Pathfinder.Algorithms {
                 if (!neighbours.ContainsKey(neighbours[curr][value])) {
 
                     permanentPairs.Add(Tuple.Create(curr, neighbours[curr][value]));
-                    Helper(neighbours[curr][value], neighbours, permanentPairs);
+                    Helper(neighbours[curr][value]);
                 }
                 neighbours[curr].RemoveAt(value);
             }

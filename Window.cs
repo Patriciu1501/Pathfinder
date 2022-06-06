@@ -30,7 +30,7 @@
             form.Text = "Pathfinder by Bogatu Patriciu";
             form.FormClosing += Events.formClose;
             
-            Tutorial.runningNotifier.Start();
+            Notifier.runningNotifier.Start();
             Application.Run(form);
 
         }
