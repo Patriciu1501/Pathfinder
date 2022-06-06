@@ -9,14 +9,9 @@
         public static bool gridOn = false;
 
         public static Form form;
-
         public static bool buildWindow;
       
         static Window() {
-
-
-            
-
 
             form = new Form();
             form.Controls.Add(Menu.topBar);
