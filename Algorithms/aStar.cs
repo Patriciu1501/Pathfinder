@@ -27,7 +27,7 @@ namespace Pathfinder.Algorithms {
             Map.source.fScore = Map.source.hScore;
             coada.InsertElement(Map.source);
 
-            while(coada.count > 0 && coada.peek != null) {
+            while(coada.peek != null) {
 
                 OOPLabel curr = coada.peek;
 
